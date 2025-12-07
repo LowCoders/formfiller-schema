@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Number Field Configuration",
+  "description": "Configuration for number input fields",
+  "allOf": [
+    {
+      "$ref": "../base/common.schema.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "number",
+          "description": "Field type identifier"
+        },
+        "editorOptions": {
+          "type": "object",
+          "description": "DevExtreme number editor options",
+          "properties": {
+            "min": {
+              "type": "number",
+              "description": "Minimum value"
+            },
+            "max": {
+              "type": "number",
+              "description": "Maximum value"
+            },
+            "step": {
+              "type": "number",
+              "description": "Step increment"
+            },
+            "format": {
+              "type": "string",
+              "description": "Number format pattern"
+            },
+            "showSpinButtons": {
+              "type": "boolean",
+              "description": "Show increment/decrement buttons"
+            }
+          }
+        }
+      },
+      "required": ["type"]
+    }
+  ]
+}
+

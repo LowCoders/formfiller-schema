@@ -1,0 +1,6050 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "FormFiller Complete Schema",
+  "description": "Complete schema for FormFiller form definitions",
+  "definitions": {
+    "ValidationRule": {
+      "type": "object",
+      "description": "Validation rule definitions for form fields",
+      "oneOf": [
+        {
+          "type": "object",
+          "description": "Makes the field required",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "required"
+              ]
+            },
+            "message": {
+              "type": "string",
+              "description": "Custom error message to display when validation fails"
+            },
+            "when": {
+              "$ref": "#/definitions/ConditionalExpression",
+              "description": "Conditional expression that determines when this validation rule should be applied"
+            }
+          },
+          "required": [
+            "type"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Validates string length with min/max constraints",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "stringLength"
+              ]
+            },
+            "min": {
+              "type": "number",
+              "description": "Minimum string length"
+            },
+            "max": {
+              "type": "number",
+              "description": "Maximum string length"
+            },
+            "message": {
+              "type": "string",
+              "description": "Custom error message to display when validation fails"
+            },
+            "when": {
+              "$ref": "#/definitions/ConditionalExpression",
+              "description": "Conditional expression that determines when this validation rule should be applied"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "anyOf": [
+            {
+              "required": [
+                "min"
+              ]
+            },
+            {
+              "required": [
+                "max"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Validates numeric values within a min/max range",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "range"
+              ]
+            },
+            "min": {
+              "type": "number",
+              "description": "Minimum allowed value"
+            },
+            "max": {
+              "type": "number",
+              "description": "Maximum allowed value"
+            },
+            "message": {
+              "type": "string",
+              "description": "Custom error message to display when validation fails"
+            },
+            "when": {
+              "$ref": "#/definitions/ConditionalExpression",
+              "description": "Conditional expression that determines when this validation rule should be applied"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "anyOf": [
+            {
+              "required": [
+                "min"
+              ]
+            },
+            {
+              "required": [
+                "max"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Validates against a regular expression pattern",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "pattern"
+              ]
+            },
+            "pattern": {
+              "type": "string",
+              "description": "Regular expression pattern for validation"
+            },
+            "message": {
+              "type": "string",
+              "description": "Custom error message to display when validation fails"
+            },
+            "when": {
+              "$ref": "#/definitions/ConditionalExpression",
+              "description": "Conditional expression that determines when this validation rule should be applied"
+            }
+          },
+          "required": [
+            "type",
+            "pattern"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Validates email address format",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "email"
+              ]
+            },
+            "message": {
+              "type": "string",
+              "description": "Custom error message to display when validation fails"
+            },
+            "when": {
+              "$ref": "#/definitions/ConditionalExpression",
+              "description": "Conditional expression that determines when this validation rule should be applied"
+            }
+          },
+          "required": [
+            "type"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Ensures the value is numeric",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "numeric"
+              ]
+            },
+            "message": {
+              "type": "string",
+              "description": "Custom error message to display when validation fails"
+            },
+            "when": {
+              "$ref": "#/definitions/ConditionalExpression",
+              "description": "Conditional expression that determines when this validation rule should be applied"
+            }
+          },
+          "required": [
+            "type"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Compares field value with another field or value",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "compare"
+              ]
+            },
+            "comparisonTarget": {
+              "type": "string",
+              "description": "Field name or value to compare against"
+            },
+            "comparisonType": {
+              "enum": [
+                "==",
+                "!=",
+                "<",
+                ">",
+                "<=",
+                ">="
+              ],
+              "description": "Comparison operator (==, !=, <, >, <=, >=)"
+            },
+            "message": {
+              "type": "string",
+              "description": "Custom error message to display when validation fails"
+            },
+            "when": {
+              "$ref": "#/definitions/ConditionalExpression",
+              "description": "Conditional expression that determines when this validation rule should be applied"
+            }
+          },
+          "required": [
+            "type"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Custom validation using a callback function",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "custom"
+              ]
+            },
+            "validationCallback": {
+              "type": "string",
+              "description": "Name of the custom validation function"
+            },
+            "message": {
+              "type": "string",
+              "description": "Custom error message to display when validation fails"
+            },
+            "when": {
+              "$ref": "#/definitions/ConditionalExpression",
+              "description": "Conditional expression that determines when this validation rule should be applied"
+            }
+          },
+          "required": [
+            "type",
+            "validationCallback"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "External API validation - validates against a remote API endpoint",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "async"
+              ]
+            },
+            "apiEndpoint": {
+              "type": "string",
+              "description": "API endpoint URL for validation"
+            },
+            "apiMethod": {
+              "enum": [
+                "GET",
+                "POST"
+              ],
+              "description": "HTTP method for the API call (default: POST)"
+            },
+            "apiPayload": {
+              "type": "object",
+              "description": "Additional payload data to send with the API request"
+            },
+            "apiTimeout": {
+              "type": "number",
+              "description": "Timeout in milliseconds (default: 5000)"
+            },
+            "message": {
+              "type": "string",
+              "description": "Custom error message to display when validation fails"
+            },
+            "when": {
+              "$ref": "#/definitions/ConditionalExpression",
+              "description": "Conditional expression that determines when this validation rule should be applied"
+            }
+          },
+          "required": [
+            "type",
+            "apiEndpoint"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Cross-field validation - validates multiple fields together",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "crossField"
+              ]
+            },
+            "targetFields": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Array of field names to validate together"
+            },
+            "crossFieldValidator": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "Name of the cross-field validation function"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "params": {
+                      "type": "object"
+                    }
+                  },
+                  "required": ["name"],
+                  "description": "Cross-field validator with name and parameters"
+                }
+              ],
+              "description": "Cross-field validator (string name or object with name and params)"
+            },
+            "message": {
+              "type": "string",
+              "description": "Custom error message to display when validation fails"
+            },
+            "when": {
+              "$ref": "#/definitions/ConditionalExpression",
+              "description": "Conditional expression that determines when this validation rule should be applied"
+            }
+          },
+          "required": [
+            "type",
+            "targetFields",
+            "crossFieldValidator"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Computed rule - performs calculations without validation (e.g., scoring, summation)",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "computed"
+              ]
+            },
+            "subtype": {
+              "enum": [
+                "exactMatch",
+                "arrayMatch",
+                "numericMatch",
+                "keywordMatch",
+                "aggregate",
+                "custom"
+              ],
+              "description": "Type of computed rule"
+            },
+            "correctAnswer": {
+              "description": "The correct answer for comparison"
+            },
+            "points": {
+              "type": "number",
+              "description": "Points awarded for correct answer"
+            },
+            "penalty": {
+              "type": "number",
+              "description": "Points deducted for incorrect answer"
+            },
+            "partialCredit": {
+              "type": "boolean",
+              "description": "Whether to award partial credit"
+            },
+            "keywords": {
+              "type": "object",
+              "properties": {
+                "required": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "optional": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "description": "Keywords for keywordMatch subtype"
+            },
+            "minLength": {
+              "type": "number",
+              "description": "Minimum length for keywordMatch"
+            },
+            "tolerance": {
+              "type": "number",
+              "description": "Tolerance for numericMatch"
+            },
+            "compute": {
+              "type": "string",
+              "description": "Name of the computation function"
+            },
+            "returnToFrontend": {
+              "type": "boolean",
+              "description": "Whether to return the computed value to the frontend"
+            },
+            "storeResult": {
+              "type": "boolean",
+              "description": "Whether to store the computed result in the database"
+            },
+            "message": {
+              "type": "string",
+              "description": "Custom error message to display when computation fails"
+            },
+            "when": {
+              "$ref": "#/definitions/ConditionalExpression",
+              "description": "Conditional expression that determines when this rule should be applied"
+            }
+          },
+          "required": [
+            "type"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Temporal validation - time-based validation rules that are active/inactive during specific periods",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "temporal"
+              ]
+            },
+            "validFrom": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Date/time from which the rule is valid (ISO 8601 format)"
+            },
+            "validUntil": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Date/time until which the rule is valid (ISO 8601 format)"
+            },
+            "schedule": {
+              "type": "string",
+              "description": "Cron expression for recurring time periods"
+            },
+            "timezone": {
+              "type": "string",
+              "description": "Timezone for temporal validation (e.g., 'Europe/Budapest')"
+            },
+            "gracePeriod": {
+              "type": "number",
+              "description": "Grace period in milliseconds after validFrom"
+            },
+            "message": {
+              "type": "string",
+              "description": "Custom error message to display when validation fails"
+            },
+            "when": {
+              "$ref": "#/definitions/ConditionalExpression",
+              "description": "Conditional expression that determines when this validation rule should be applied"
+            }
+          },
+          "required": [
+            "type"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Plugin validation - custom plugin-based validation",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "plugin"
+              ]
+            },
+            "pluginName": {
+              "type": "string",
+              "description": "Name of the validation plugin to execute"
+            },
+            "pluginConfig": {
+              "type": "object",
+              "description": "Configuration parameters for the plugin"
+            },
+            "message": {
+              "type": "string",
+              "description": "Custom error message to display when validation fails"
+            },
+            "when": {
+              "$ref": "#/definitions/ConditionalExpression",
+              "description": "Conditional expression that determines when this validation rule should be applied"
+            }
+          },
+          "required": [
+            "type",
+            "pluginName"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Validates array length with min/max constraints",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "arrayLength"
+              ]
+            },
+            "min": {
+              "type": "number",
+              "description": "Minimum array length"
+            },
+            "max": {
+              "type": "number",
+              "description": "Maximum array length"
+            },
+            "message": {
+              "type": "string",
+              "description": "Custom error message to display when validation fails"
+            },
+            "when": {
+              "$ref": "#/definitions/ConditionalExpression",
+              "description": "Conditional expression that determines when this validation rule should be applied"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "anyOf": [
+            {
+              "required": [
+                "min"
+              ]
+            },
+            {
+              "required": [
+                "max"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Logical AND group - all validation rules must pass",
+          "additionalProperties": false,
+          "properties": {
+            "and": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ValidationRule"
+              },
+              "minItems": 1,
+              "description": "Array of validation rules that must ALL pass"
+            },
+            "groupMessage": {
+              "type": "string",
+              "description": "Error message when the AND group validation fails"
+            },
+            "stopOnFirstError": {
+              "type": "boolean",
+              "description": "Stop validation at first failing rule (default: false)"
+            }
+          },
+          "required": [
+            "and"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Logical OR group - at least one validation rule must pass",
+          "additionalProperties": false,
+          "properties": {
+            "or": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ValidationRule"
+              },
+              "minItems": 1,
+              "description": "Array of validation rules where AT LEAST ONE must pass"
+            },
+            "groupMessage": {
+              "type": "string",
+              "description": "Error message when the OR group validation fails"
+            },
+            "stopOnFirstError": {
+              "type": "boolean",
+              "description": "Stop validation at first failing rule (default: false)"
+            }
+          },
+          "required": [
+            "or"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "Logical NOT group - the validation rule must NOT pass",
+          "additionalProperties": false,
+          "properties": {
+            "not": {
+              "$ref": "#/definitions/ValidationRule",
+              "description": "Validation rule that must NOT pass"
+            },
+            "groupMessage": {
+              "type": "string",
+              "description": "Error message when the NOT group validation fails"
+            }
+          },
+          "required": [
+            "not"
+          ]
+        }
+      ]
+    },
+    "ConditionalField": {
+      "type": "object",
+      "description": "Single condition for field-based conditional logic",
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "type": "string",
+          "description": "Name of the field to check"
+        },
+        "operator": {
+          "enum": [
+            "==",
+            "!=",
+            ">",
+            "<",
+            ">=",
+            "<=",
+            "in",
+            "notIn"
+          ],
+          "description": "Comparison operator to apply"
+        },
+        "value": {
+          "description": "Value to compare against"
+        }
+      },
+      "required": [
+        "field",
+        "operator",
+        "value"
+      ]
+    },
+    "ConditionalExpression": {
+      "description": "Conditional expression supporting complex logical operations (AND, OR, NOT) and field comparisons",
+      "anyOf": [
+        {
+          "type": "object",
+          "description": "Logical AND operator - combines multiple conditions with AND logic",
+          "properties": {
+            "and": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ConditionalExpression"
+              },
+              "minItems": 1
+            }
+          },
+          "required": [
+            "and"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Logical OR operator - combines multiple conditions with OR logic",
+          "properties": {
+            "or": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ConditionalExpression"
+              },
+              "minItems": 1
+            }
+          },
+          "required": [
+            "or"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Logical NOT operator - negates a condition",
+          "properties": {
+            "not": {
+              "$ref": "#/definitions/ConditionalExpression"
+            }
+          },
+          "required": [
+            "not"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "description": "Array operator for 'in'/'notIn': { field: ['in', [values]] } - checks if field value is/isn't in the list",
+          "patternProperties": {
+            "^(?!and$|or$|not$).*$": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "in",
+                    "notIn"
+                  ]
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "minItems": 1
+                }
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "minProperties": 1
+        },
+        {
+          "type": "object",
+          "description": "Comparison operator with scalar value: { field: ['operator', value] } - comparison operators (==, !=, >, <, >=, <=)",
+          "patternProperties": {
+            "^(?!and$|or$|not$).*$": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "==",
+                    "!=",
+                    ">",
+                    "<",
+                    ">=",
+                    "<="
+                  ]
+                },
+                {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "minProperties": 1
+        },
+        {
+          "type": "object",
+          "description": "String operators: { field: ['contains'|'startswith'|'endswith', value] } - text-based comparisons",
+          "patternProperties": {
+            "^(?!and$|or$|not$).*$": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "contains",
+                    "startswith",
+                    "endswith"
+                  ]
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "minProperties": 1
+        },
+        {
+          "type": "object",
+          "description": "Simplified 'in' operator: { field: [values] } - implicit 'in', field value must be one of the listed values. NOT supported with nested arrays.",
+          "patternProperties": {
+            "^(?!and$|or$|not$).*$": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "minItems": 1,
+              "not": {
+                "contains": {
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "additionalProperties": false,
+          "minProperties": 1
+        },
+        {
+          "type": "object",
+          "description": "Simple equality: { field: value } - field value equals the specified value",
+          "patternProperties": {
+            "^(?!and$|or$|not$).*$": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "minProperties": 1
+        }
+      ]
+    },
+    "LookupConfig": {
+      "type": "object",
+      "description": "Configuration for dropdown/lookup data sources",
+      "additionalProperties": false,
+      "properties": {
+        "dataSource": {
+          "type": "array",
+          "description": "Array of items or data source configuration"
+        },
+        "displayExpr": {
+          "type": "string",
+          "description": "Property name to display in the dropdown"
+        },
+        "valueExpr": {
+          "type": "string",
+          "description": "Property name to use as the value"
+        },
+        "setCellValue": {
+          "type": "boolean",
+          "description": "Whether to set the cell value in grid editing mode"
+        },
+        "dependsOn": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Field names that this lookup depends on (for cascading dropdowns)"
+        }
+      },
+      "required": [
+        "dataSource"
+      ]
+    },
+    "BaseFieldConfig": {
+      "type": "object",
+      "description": "Base properties shared by all field types",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Unique identifier for the field"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ],
+          "description": "Field label (string or object with text, visible, location)"
+        },
+        "visible": {
+          "type": "boolean",
+          "description": "Whether the field is visible"
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Whether the field is disabled"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Field width (number in pixels or string like '100%')"
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Field height (number in pixels or string like '100%')"
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Minimum field height (number in pixels or string like '100%')"
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Maximum field height (number in pixels or string like '100%')"
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          },
+          "description": "Array of validation rules to apply"
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression",
+          "description": "Conditional expression to control visibility"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression",
+          "description": "Conditional expression to control disabled state"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression",
+          "description": "Conditional expression to control readonly state"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression",
+          "description": "Conditional expression to make field conditionally required"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        }
+      }
+    },
+    "FieldType": {
+      "type": "string",
+      "description": "Available field types in the form builder",
+      "enum": [
+        "autocomplete",
+        "calendar",
+        "checkbox",
+        "colorbox",
+        "date",
+        "daterange",
+        "dropdown",
+        "dropdownbox",
+        "htmleditor",
+        "lookup",
+        "number",
+        "radiogroup",
+        "rangeslider",
+        "selectbox",
+        "slider",
+        "switch",
+        "tagbox",
+        "text",
+        "textarea",
+        "boolean",
+        "grid",
+        "tree",
+        "form",
+        "time",
+        "datetime",
+        "group",
+        "tabbed",
+        "tab",
+        "stepper",
+        "step",
+        "button",
+        "empty"
+      ]
+    },
+    "TextFieldConfig": {
+      "type": "object",
+      "description": "Text input field configuration",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "text"
+          ]
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "maxLength": {
+          "type": "number"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "showClearButton": {
+          "type": "boolean"
+        },
+        "value": {
+          "type": "string",
+          "description": "Initial/default value"
+        },
+        "cssClass": {
+          "type": "string"
+        },
+        "helpText": {
+          "type": "string"
+        },
+        "readOnly": {
+          "type": "boolean"
+        },
+        "mode": {
+          "enum": [
+            "text",
+            "password",
+            "email",
+            "tel",
+            "url"
+          ],
+          "description": "Input mode"
+        },
+        "mask": {
+          "type": "string",
+          "description": "Input mask pattern (e.g., '+1 (000) 000-0000')"
+        },
+        "maskRules": {
+          "type": "object",
+          "description": "Custom mask rules (e.g., { X: /[02-9]/ })",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "maskChar": {
+          "type": "string",
+          "description": "Placeholder character for mask (default: '_')"
+        },
+        "maskInvalidMessage": {
+          "type": "string",
+          "description": "Error message for invalid mask input"
+        },
+        "useMaskedValue": {
+          "type": "boolean",
+          "description": "Whether to use the masked value (default: false)"
+        },
+        "colSpan": {
+          "type": "number",
+          "description": "Number of columns the item should span in the form layout"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "NumberFieldConfig": {
+      "type": "object",
+      "description": "Numeric input field configuration",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "number"
+          ]
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "showClearButton": {
+          "type": "boolean"
+        },
+        "value": {
+          "type": "number",
+          "description": "Initial/default value"
+        },
+        "cssClass": {
+          "type": "string"
+        },
+        "helpText": {
+          "type": "string"
+        },
+        "readOnly": {
+          "type": "boolean"
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum allowed value"
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum allowed value"
+        },
+        "step": {
+          "type": "number",
+          "description": "Step value for increment/decrement"
+        },
+        "showSpinButtons": {
+          "type": "boolean",
+          "description": "Whether to show spin buttons"
+        },
+        "format": {
+          "oneOf": [
+            {
+              "type": "string",
+              "description": "Format string pattern (e.g., '#,##0.00')"
+            },
+            {
+              "$ref": "#/definitions/NumberFormat"
+            }
+          ],
+          "description": "Number format configuration"
+        },
+        "colSpan": {
+          "type": "number",
+          "description": "Number of columns the item should span in the form layout"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "NumberFormat": {
+      "type": "object",
+      "description": "Number format configuration for DevExtreme NumberBox",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "enum": [
+            "currency",
+            "percent",
+            "decimal",
+            "fixedPoint",
+            "exponential",
+            "thousands",
+            "millions",
+            "billions",
+            "trillions",
+            "largeNumber"
+          ],
+          "description": "Number format type"
+        },
+        "precision": {
+          "type": "number",
+          "description": "Number of decimal places"
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency code (e.g., 'USD', 'EUR', 'HUF')"
+        }
+      }
+    },
+    "DateFieldConfig": {
+      "type": "object",
+      "description": "Date picker field configuration",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "date"
+          ]
+        },
+        "min": {
+          "type": "string",
+          "description": "Minimum allowed date value"
+        },
+        "max": {
+          "type": "string",
+          "description": "Maximum allowed date value"
+        },
+        "displayFormat": {
+          "type": "string",
+          "description": "Display format string for the date (e.g., 'yyyy.MM.dd')"
+        },
+        "format": {
+          "type": "string",
+          "description": "Value format string for the date"
+        },
+        "showClearButton": {
+          "type": "boolean",
+          "description": "Whether to show clear button"
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Placeholder text for the date input"
+        },
+        "value": {
+          "type": "string",
+          "description": "Initial/default date value"
+        },
+        "cssClass": {
+          "type": "string",
+          "description": "Custom CSS class for styling"
+        },
+        "helpText": {
+          "type": "string",
+          "description": "Help text displayed below the field"
+        },
+        "readOnly": {
+          "type": "boolean",
+          "description": "Whether the field is read-only"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ],
+          "description": "Field label configuration"
+        },
+        "pickerType": {
+          "enum": [
+            "calendar",
+            "list",
+            "native",
+            "rollers"
+          ],
+          "description": "Type of date picker UI"
+        },
+        "useMaskBehavior": {
+          "type": "boolean",
+          "description": "Whether to use mask behavior for date input"
+        },
+        "openOnFieldClick": {
+          "type": "boolean",
+          "description": "Whether to open picker when clicking the field"
+        },
+        "dateSerializationFormat": {
+          "type": "string",
+          "description": "Format for serializing date values"
+        },
+        "calendarOptions": {
+          "type": "object",
+          "description": "Additional calendar widget options"
+        },
+        "colSpan": {
+          "type": "number",
+          "description": "Number of columns the item should span in the form layout"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "DateTimeFieldConfig": {
+      "type": "object",
+      "description": "Date and time picker field configuration",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "datetime"
+          ]
+        },
+        "min": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "string",
+              "format": "date"
+            }
+          ],
+          "description": "Minimum allowed datetime value"
+        },
+        "max": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "string",
+              "format": "date"
+            }
+          ],
+          "description": "Maximum allowed datetime value"
+        },
+        "displayFormat": {
+          "type": "string",
+          "description": "Display format string for the datetime (e.g., 'yyyy.MM.dd HH:mm')"
+        },
+        "format": {
+          "type": "string",
+          "description": "Value format string for the datetime"
+        },
+        "showClearButton": {
+          "type": "boolean",
+          "description": "Whether to show clear button"
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Placeholder text for the datetime input"
+        },
+        "value": {
+          "type": "string",
+          "description": "Initial/default datetime value"
+        },
+        "cssClass": {
+          "type": "string",
+          "description": "Custom CSS class for styling"
+        },
+        "helpText": {
+          "type": "string",
+          "description": "Help text displayed below the field"
+        },
+        "readOnly": {
+          "type": "boolean",
+          "description": "Whether the field is read-only"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ],
+          "description": "Field label configuration"
+        },
+        "pickerType": {
+          "enum": [
+            "calendar",
+            "list",
+            "native",
+            "rollers"
+          ],
+          "description": "Type of datetime picker UI"
+        },
+        "useMaskBehavior": {
+          "type": "boolean",
+          "description": "Whether to use mask behavior for datetime input"
+        },
+        "openOnFieldClick": {
+          "type": "boolean",
+          "description": "Whether to open picker when clicking the field"
+        },
+        "dateSerializationFormat": {
+          "type": "string",
+          "description": "Format for serializing datetime values"
+        },
+        "calendarOptions": {
+          "type": "object",
+          "description": "Additional calendar widget options"
+        },
+        "colSpan": {
+          "type": "number",
+          "description": "Number of columns the item should span in the form layout"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "TimeFieldConfig": {
+      "type": "object",
+      "description": "Time picker field configuration",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "time"
+          ]
+        },
+        "min": {
+          "type": "string",
+          "description": "Minimum allowed time value (e.g., '09:00')"
+        },
+        "max": {
+          "type": "string",
+          "description": "Maximum allowed time value (e.g., '17:00')"
+        },
+        "displayFormat": {
+          "type": "string",
+          "description": "Display format string for the time (e.g., 'HH:mm')"
+        },
+        "format": {
+          "type": "string",
+          "description": "Value format string for the time"
+        },
+        "showClearButton": {
+          "type": "boolean",
+          "description": "Whether to show clear button"
+        },
+        "interval": {
+          "type": "number",
+          "description": "Minutes interval for time picker (5, 10, 15, 30, 60)"
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Placeholder text for the time input"
+        },
+        "value": {
+          "type": "string",
+          "description": "Initial/default time value"
+        },
+        "cssClass": {
+          "type": "string",
+          "description": "Custom CSS class for styling"
+        },
+        "helpText": {
+          "type": "string",
+          "description": "Help text displayed below the field"
+        },
+        "readOnly": {
+          "type": "boolean",
+          "description": "Whether the field is read-only"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ],
+          "description": "Field label configuration"
+        },
+        "pickerType": {
+          "enum": [
+            "calendar",
+            "list",
+            "native",
+            "rollers"
+          ],
+          "description": "Type of time picker UI"
+        },
+        "colSpan": {
+          "type": "number",
+          "description": "Number of columns the item should span in the form layout"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "DateRangeFieldConfig": {
+      "type": "object",
+      "description": "Date range picker field configuration",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "daterange"
+          ]
+        },
+        "min": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "string",
+              "format": "date-time"
+            }
+          ],
+          "description": "Minimum allowed date value for the range"
+        },
+        "max": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "string",
+              "format": "date-time"
+            }
+          ],
+          "description": "Maximum allowed date value for the range"
+        },
+        "startDateExpr": {
+          "type": "string",
+          "description": "Expression for the start date field"
+        },
+        "endDateExpr": {
+          "type": "string",
+          "description": "Expression for the end date field"
+        },
+        "displayFormat": {
+          "type": "string",
+          "description": "Display format string for dates in the range"
+        },
+        "format": {
+          "type": "string",
+          "description": "Value format string for dates in the range"
+        },
+        "showClearButton": {
+          "type": "boolean",
+          "description": "Whether to show clear button"
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Placeholder text for the date range input"
+        },
+        "value": {
+          "type": "object",
+          "description": "Initial/default date range value",
+          "properties": {
+            "start": {
+              "type": "string"
+            },
+            "end": {
+              "type": "string"
+            }
+          }
+        },
+        "cssClass": {
+          "type": "string",
+          "description": "Custom CSS class for styling"
+        },
+        "helpText": {
+          "type": "string",
+          "description": "Help text displayed below the field"
+        },
+        "readOnly": {
+          "type": "boolean",
+          "description": "Whether the field is read-only"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ],
+          "description": "Field label configuration"
+        },
+        "openOnFieldClick": {
+          "type": "boolean",
+          "description": "Whether to open picker when clicking the field"
+        },
+        "dateSerializationFormat": {
+          "type": "string",
+          "description": "Format for serializing date values"
+        },
+        "calendarOptions": {
+          "type": "object",
+          "description": "Additional calendar widget options"
+        },
+        "colSpan": {
+          "type": "number",
+          "description": "Number of columns the item should span in the form layout"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "BooleanFieldConfig": {
+      "type": "object",
+      "description": "Single boolean value (checked/unchecked). For multi-select lists with multiple options, use 'tagbox' type instead. Properties: text (label), value (boolean default).",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "boolean",
+            "checkbox"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "description": "Label text for the checkbox"
+        },
+        "value": {
+          "type": "boolean",
+          "description": "Initial/default checked state"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ],
+          "description": "Field label configuration"
+        },
+        "cssClass": {
+          "type": "string",
+          "description": "Custom CSS class for styling"
+        },
+        "helpText": {
+          "type": "string",
+          "description": "Help text displayed below the field"
+        },
+        "readOnly": {
+          "type": "boolean",
+          "description": "Whether the field is read-only"
+        },
+        "colSpan": {
+          "type": "number",
+          "description": "Number of columns the item should span in the form layout"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "SwitchFieldConfig": {
+      "type": "object",
+      "description": "Switch toggle field configuration",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "switch"
+          ]
+        },
+        "switchedOnText": {
+          "type": "string",
+          "description": "Text to display when switch is on"
+        },
+        "switchedOffText": {
+          "type": "string",
+          "description": "Text to display when switch is off"
+        },
+        "value": {
+          "type": "boolean",
+          "description": "Initial/default switch state"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ],
+          "description": "Field label configuration"
+        },
+        "cssClass": {
+          "type": "string",
+          "description": "Custom CSS class for styling"
+        },
+        "helpText": {
+          "type": "string",
+          "description": "Help text displayed below the field"
+        },
+        "readOnly": {
+          "type": "boolean",
+          "description": "Whether the field is read-only"
+        },
+        "colSpan": {
+          "type": "number",
+          "description": "Number of columns the item should span in the form layout"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "DropdownFieldConfig": {
+      "type": "object",
+      "description": "Dropdown/select field configuration",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "dropdown",
+            "selectbox"
+          ]
+        },
+        "lookup": {
+          "$ref": "#/definitions/LookupConfig"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "showClearButton": {
+          "type": "boolean"
+        },
+        "value": {
+          "description": "Initial/default selected value"
+        },
+        "cssClass": {
+          "type": "string"
+        },
+        "helpText": {
+          "type": "string"
+        },
+        "readOnly": {
+          "type": "boolean"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "value": {},
+                  "text": {
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "description": "Dropdown options"
+        },
+        "valueExpr": {
+          "type": "string",
+          "default": "value"
+        },
+        "displayExpr": {
+          "type": "string",
+          "default": "text"
+        },
+        "searchEnabled": {
+          "type": "boolean"
+        },
+        "acceptCustomValue": {
+          "type": "boolean"
+        },
+        "showDropDownButton": {
+          "type": "boolean"
+        },
+        "colSpan": {
+          "type": "number",
+          "description": "Number of columns the item should span in the form layout"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "TagBoxFieldConfig": {
+      "type": "object",
+      "description": "Multi-select list with multiple selectable options. Use this for quiz/exam questions where users can select multiple answers. Requires 'options' array or 'lookup.dataSource'. Use 'checkbox' for single yes/no values only.",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "tagbox"
+          ]
+        },
+        "lookup": {
+          "$ref": "#/definitions/LookupConfig"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "showClearButton": {
+          "type": "boolean"
+        },
+        "value": {
+          "type": "array",
+          "description": "Initial/default selected values"
+        },
+        "cssClass": {
+          "type": "string"
+        },
+        "helpText": {
+          "type": "string"
+        },
+        "readOnly": {
+          "type": "boolean"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "value": {},
+                  "text": {
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "description": "Available options"
+        },
+        "valueExpr": {
+          "type": "string",
+          "default": "value"
+        },
+        "displayExpr": {
+          "type": "string",
+          "default": "text"
+        },
+        "searchEnabled": {
+          "type": "boolean"
+        },
+        "showSelectionControls": {
+          "type": "boolean",
+          "description": "Show 'Select All' checkbox"
+        },
+        "applyValueMode": {
+          "enum": [
+            "instantly",
+            "useButtons"
+          ],
+          "description": "When to apply selected values"
+        },
+        "colSpan": {
+          "type": "number",
+          "description": "Number of columns the item should span in the form layout"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "RadioGroupFieldConfig": {
+      "type": "object",
+      "description": "Radio button group field configuration",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "radiogroup"
+          ]
+        },
+        "lookup": {
+          "$ref": "#/definitions/LookupConfig"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "showClearButton": {
+          "type": "boolean"
+        },
+        "value": {
+          "description": "Initial/default selected value"
+        },
+        "cssClass": {
+          "type": "string"
+        },
+        "helpText": {
+          "type": "string"
+        },
+        "readOnly": {
+          "type": "boolean"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "value": {},
+                  "text": {
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "description": "Radio button options"
+        },
+        "valueExpr": {
+          "type": "string",
+          "default": "value"
+        },
+        "displayExpr": {
+          "type": "string",
+          "default": "text"
+        },
+        "layout": {
+          "enum": [
+            "horizontal",
+            "vertical"
+          ],
+          "description": "Layout direction"
+        },
+        "colSpan": {
+          "type": "number",
+          "description": "Number of columns the item should span in the form layout"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "SliderFieldConfig": {
+      "type": "object",
+      "description": "Slider input field configuration",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "slider"
+          ]
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum value for the slider"
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum value for the slider"
+        },
+        "step": {
+          "type": "number",
+          "description": "Step value for slider increment/decrement"
+        },
+        "showRange": {
+          "type": "boolean",
+          "description": "Whether to show the range indicator"
+        },
+        "tooltip": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Tooltip configuration for the slider. Use 'enabled' to show/hide tooltip (NOT 'isShown')",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Show or hide the tooltip (use this instead of 'isShown')"
+            },
+            "format": {
+              "type": "string",
+              "description": "Number format for the tooltip value"
+            },
+            "showMode": {
+              "type": "string",
+              "enum": [
+                "always",
+                "onHover"
+              ],
+              "description": "When to display the tooltip"
+            }
+          }
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "RangeSliderFieldConfig": {
+      "type": "object",
+      "description": "Range slider field configuration",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "rangeslider"
+          ]
+        },
+        "min": {
+          "type": "number",
+          "description": "Minimum value for the range slider"
+        },
+        "max": {
+          "type": "number",
+          "description": "Maximum value for the range slider"
+        },
+        "step": {
+          "type": "number",
+          "description": "Step value for range slider increment/decrement"
+        },
+        "start": {
+          "type": "number",
+          "description": "Initial start value of the range"
+        },
+        "end": {
+          "type": "number",
+          "description": "Initial end value of the range"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "TextAreaFieldConfig": {
+      "type": "object",
+      "description": "Multi-line text area field configuration",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "textarea"
+          ]
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "maxLength": {
+          "type": "number"
+        },
+        "value": {
+          "type": "string",
+          "description": "Initial/default value"
+        },
+        "readOnly": {
+          "type": "boolean"
+        },
+        "autoResizeEnabled": {
+          "type": "boolean",
+          "description": "Whether the text area auto-resizes based on content"
+        },
+        "showClearButton": {
+          "type": "boolean"
+        },
+        "cssClass": {
+          "type": "string"
+        },
+        "helpText": {
+          "type": "string"
+        },
+        "colSpan": {
+          "type": "number",
+          "description": "Number of columns the item should span in the form layout"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "HtmlEditorFieldConfig": {
+      "type": "object",
+      "description": "Rich text HTML editor field configuration",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "htmleditor"
+          ]
+        },
+        "toolbar": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Toolbar configuration for the HTML editor",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "mediaResizing": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Media resizing configuration",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            }
+          }
+        },
+        "value": {
+          "type": "string",
+          "description": "Initial/default HTML content value"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "ColorBoxFieldConfig": {
+      "type": "object",
+      "description": "Color picker field configuration",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "colorbox"
+          ]
+        },
+        "applyValueMode": {
+          "type": "string",
+          "enum": [
+            "instantly",
+            "useButtons"
+          ],
+          "description": "When to apply the selected color value"
+        },
+        "editAlphaChannel": {
+          "type": "boolean",
+          "description": "Whether to allow editing the alpha channel (transparency)"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "AutocompleteFieldConfig": {
+      "type": "object",
+      "description": "Autocomplete input field configuration",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "autocomplete"
+          ]
+        },
+        "lookup": {
+          "$ref": "#/definitions/LookupConfig"
+        },
+        "minSearchLength": {
+          "type": "number",
+          "description": "Minimum characters required to trigger search"
+        },
+        "searchTimeout": {
+          "type": "number",
+          "description": "Delay in milliseconds before triggering search"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "LookupFieldConfig": {
+      "type": "object",
+      "description": "Lookup field with search configuration",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "lookup"
+          ]
+        },
+        "lookup": {
+          "$ref": "#/definitions/LookupConfig"
+        },
+        "searchEnabled": {
+          "type": "boolean",
+          "description": "Whether search functionality is enabled"
+        },
+        "minSearchLength": {
+          "type": "number",
+          "description": "Minimum characters required to trigger search"
+        },
+        "searchTimeout": {
+          "type": "number",
+          "description": "Delay in milliseconds before triggering search"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "CalendarFieldConfig": {
+      "type": "object",
+      "description": "Calendar widget field configuration",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "calendar"
+          ]
+        },
+        "min": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "string",
+              "format": "date-time"
+            }
+          ],
+          "description": "Minimum selectable date"
+        },
+        "max": {
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "string",
+              "format": "date-time"
+            }
+          ],
+          "description": "Maximum selectable date"
+        },
+        "firstDayOfWeek": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 6,
+          "description": "First day of the week (0 = Sunday, 1 = Monday, etc.)"
+        },
+        "zoomLevel": {
+          "type": "string",
+          "enum": [
+            "month",
+            "year",
+            "decade",
+            "century"
+          ],
+          "description": "Initial zoom level of the calendar"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "FormPreferences": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Form-specific preferences and settings. For exam/quiz forms with computedRules, set computedRuleResults='detailed' and storeComputedResults=true to enable automatic scoring display.",
+      "properties": {
+        "addSaveBtn": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically add save button at the end of form"
+        },
+        "saveLimit": {
+          "type": "number",
+          "default": null,
+          "description": "Maximum number of saves allowed (quota)"
+        },
+        "saveUrl": {
+          "type": "string",
+          "description": "Optional custom save endpoint URL"
+        },
+        "computedRuleResults": {
+          "type": "string",
+          "enum": ["none", "score", "detailed"],
+          "default": "none",
+          "description": "How to display computed rule results after form submission. 'none': no display, 'score': show only total score, 'detailed': show per-question feedback and total score. For exams/quizzes, use 'detailed'."
+        },
+        "storeComputedResults": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether to store computed rule results in the database with form data. Set to true for exams/quizzes to persist scores."
+        }
+      }
+    },
+    "ItemConfig": {
+      "type": "object",
+      "description": "Configuration for form items (grid, tree, or form)",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "grid",
+            "tree",
+            "form"
+          ]
+        },
+        "items": {
+          "type": "array",
+          "description": "Array of field configurations",
+          "items": {
+            "$ref": "#/definitions/FieldConfig"
+          }
+        },
+        "dataTransformation": {
+          "type": "string",
+          "description": "JavaScript function name for transforming data"
+        },
+        "toolbar": {
+          "type": "object",
+          "description": "Toolbar configuration for grid/tree widgets",
+          "additionalProperties": false,
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "location": {
+                    "type": "string",
+                    "enum": [
+                      "before",
+                      "after"
+                    ]
+                  },
+                  "widget": {
+                    "type": "string",
+                    "enum": [
+                      "dxButton",
+                      "dxSelectBox"
+                    ]
+                  },
+                  "options": {
+                    "type": "object",
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "location",
+                  "widget",
+                  "options"
+                ]
+              }
+            }
+          }
+        },
+        "dataSource": {
+          "description": "Data source for the grid/tree"
+        },
+        "editing": {
+          "type": "object",
+          "description": "Editing mode configuration (batch, cell, row, form, popup)",
+          "additionalProperties": false,
+          "properties": {
+            "allowAdding": {
+              "type": "boolean"
+            },
+            "allowUpdating": {
+              "type": "boolean"
+            },
+            "allowDeleting": {
+              "type": "boolean"
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "batch",
+                "cell",
+                "row",
+                "form",
+                "popup"
+              ]
+            }
+          }
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "keyExpr": {
+          "type": "string",
+          "description": "Key field name for tree structure (default: 'id')"
+        },
+        "parentIdExpr": {
+          "type": "string",
+          "description": "Parent ID field name for tree structure (default: 'parentId')"
+        },
+        "validationRules": {
+          "type": "array",
+          "description": "Form-level validation rules",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "computedRules": {
+          "type": "array",
+          "description": "Form-level computed rules for aggregation and scoring",
+          "items": {
+            "$ref": "#/definitions/ComputedRule"
+          }
+        },
+        "autoExpandAll": {
+          "type": "boolean",
+          "description": "Automatically expand all tree nodes on load (DevExtreme tree-specific)"
+        },
+        "showRowLines": {
+          "type": "boolean",
+          "description": "Show lines between rows (DevExtreme grid/tree-specific)"
+        },
+        "showBorders": {
+          "type": "boolean",
+          "description": "Show borders around the grid/tree (DevExtreme-specific)"
+        },
+        "columnAutoWidth": {
+          "type": "boolean",
+          "description": "Automatically adjust column widths (DevExtreme-specific)"
+        },
+        "allowColumnReordering": {
+          "type": "boolean",
+          "description": "Allow users to reorder columns (DevExtreme-specific)"
+        },
+        "allowColumnResizing": {
+          "type": "boolean",
+          "description": "Allow users to resize columns (DevExtreme-specific)"
+        },
+        "showColumnHeaders": {
+          "type": "boolean",
+          "description": "Show column headers (DevExtreme-specific)"
+        }
+      },
+      "required": [
+        "items"
+      ]
+    },
+    "ComputedRule": {
+      "type": "object",
+      "description": "Form-level computed rule for automatic scoring in exams/quizzes. Two types: 'field' evaluates individual answers against correct values, 'aggregate' calculates total scores and assigns grades. Required properties: id, name, type. For field type also use: fieldName, subtype, correctAnswer, points. For aggregate type also use: inputFields, evaluationRules.",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the computed rule (e.g., 'q1_eval', 'total_score')"
+        },
+        "name": {
+          "type": "string",
+          "description": "Descriptive name for the computed rule (REQUIRED)"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "field",
+            "aggregate"
+          ],
+          "description": "Type of computed rule. 'field': evaluates a single field's answer (requires fieldName, subtype, correctAnswer, points). 'aggregate': calculates total score from field rules and assigns grade (requires inputFields, evaluationRules with percentage-based conditions)."
+        },
+        "fieldName": {
+          "type": "string",
+          "description": "Full path to the target field using dot notation (e.g., 'groupName.questionName'). Required for type='field'."
+        },
+        "subtype": {
+          "type": "string",
+          "enum": [
+            "exactMatch",
+            "arrayMatch",
+            "numericMatch",
+            "keywordMatch",
+            "custom"
+          ],
+          "description": "Evaluation subtype for type='field'. exactMatch: value must equal correctAnswer exactly. arrayMatch: for multi-select fields (tagbox). numericMatch: allows tolerance for numbers. keywordMatch: checks for required/optional keywords in text."
+        },
+        "correctAnswer": {
+          "description": "Expected correct answer for type='field' rules. Type depends on field: string for text/radio, array for tagbox, number for numeric fields."
+        },
+        "keywords": {
+          "type": "object",
+          "properties": {
+            "required": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "optional": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "description": "Keywords for keywordMatch subtype"
+        },
+        "points": {
+          "type": "number",
+          "description": "Points awarded for correct answer"
+        },
+        "penalty": {
+          "type": "number",
+          "description": "Points deducted for incorrect answer"
+        },
+        "partialCredit": {
+          "type": "boolean",
+          "description": "Allow partial credit for partially correct answers"
+        },
+        "tolerance": {
+          "type": "number",
+          "description": "Tolerance for numeric comparisons"
+        },
+        "minLength": {
+          "type": "number",
+          "description": "Minimum length for text answers"
+        },
+        "message": {
+          "type": "string",
+          "description": "Error message for incorrect answer"
+        },
+        "inputFields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Field paths to include in score aggregation (required for type='aggregate'). These should match the fieldName values from your type='field' rules. Example: ['basics.q1', 'basics.q2', 'advanced.q3']"
+        },
+        "categoryMapping": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Mapping of field names to category names"
+        },
+        "evaluationRules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "condition": {
+                "$ref": "#/definitions/ConditionalExpression",
+                "description": "Condition for this evaluation rule. MUST be an object, NOT a string! For percentage-based scoring use format: { \"percentage\": [\"operator\", value] }. Example: { \"percentage\": [\">=\", 90] } means 90% or higher score. Valid operators: ==, !=, >, <, >=, <=. DO NOT use string format like 'score >= 90'."
+              },
+              "result": {
+                "type": "string",
+                "description": "Result label/grade to assign when condition is met (e.g., 'Excellent', 'Pass', 'Fail')"
+              },
+              "message": {
+                "type": "string",
+                "description": "Feedback message to display when this evaluation rule matches"
+              }
+            },
+            "required": [
+              "condition",
+              "result",
+              "message"
+            ]
+          },
+          "description": "Evaluation rules for aggregate scoring (used when type='aggregate'). Each rule defines a condition based on percentage score, a result label, and a feedback message. Rules are evaluated in order - first matching rule wins. Example rule: { \"condition\": { \"percentage\": [\">=\", 90] }, \"result\": \"Excellent\", \"message\": \"Great job!\" }"
+        },
+        "returnToFrontend": {
+          "type": "boolean",
+          "description": "Whether to return the result to the frontend"
+        },
+        "storeResult": {
+          "type": "boolean",
+          "description": "Whether to store the result in the database"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "type"
+      ]
+    },
+    "FormConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Root-level form configuration object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Form title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Form description"
+        },
+        "slug": {
+          "type": "string",
+          "description": "URL-friendly slug"
+        },
+        "preferences": {
+          "$ref": "#/definitions/FormPreferences",
+          "description": "Form-specific preferences"
+        },
+        "itemConfig": {
+          "$ref": "#/definitions/ItemConfig",
+          "description": "Item configuration (formerly ViewConfig)"
+        },
+        "isActive": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether the form is active"
+        },
+        "createdBy": {
+          "type": "string",
+          "description": "User ID who created the form"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tags for categorization"
+        },
+        "version": {
+          "type": "string",
+          "default": "2.0.0",
+          "description": "Schema version"
+        },
+        "isPublic": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether the form is public"
+        },
+        "allowedUsers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of user IDs with access"
+        }
+      },
+      "required": [
+        "title",
+        "itemConfig"
+      ]
+    },
+    "GridFieldConfig": {
+      "type": "object",
+      "description": "Data grid field configuration with columns and editing",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ],
+          "description": "Field label (string or object with text, visible, location)"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "type": {
+          "enum": [
+            "grid"
+          ]
+        },
+        "config": {
+          "$ref": "#/definitions/ItemConfig"
+        }
+      },
+      "required": [
+        "type",
+        "config"
+      ]
+    },
+    "TreeFieldConfig": {
+      "type": "object",
+      "description": "Tree list field configuration with hierarchical data",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ],
+          "description": "Field label (string or object with text, visible, location)"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "type": {
+          "enum": [
+            "tree"
+          ]
+        },
+        "config": {
+          "$ref": "#/definitions/ItemConfig"
+        }
+      },
+      "required": [
+        "type",
+        "config"
+      ]
+    },
+    "FormFieldConfig": {
+      "type": "object",
+      "description": "Nested form field configuration",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ],
+          "description": "Field label (string or object with text, visible, location)"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "type": {
+          "enum": [
+            "form"
+          ]
+        },
+        "config": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ItemConfig"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FieldConfig"
+              }
+            }
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "config"
+      ]
+    },
+    "GroupFieldConfig": {
+      "type": "object",
+      "description": "Group container for organizing fields with optional caption",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ],
+          "description": "Field label (string or object with text, visible, location)"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "group"
+          ]
+        },
+        "caption": {
+          "type": "string",
+          "description": "Group header caption text"
+        },
+        "captionRender": {
+          "type": "string",
+          "description": "Custom render function name for the caption"
+        },
+        "colCount": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "enum": [
+                "auto"
+              ]
+            }
+          ],
+          "description": "Number of columns for field layout (or 'auto'). Use this to create multi-column layouts within groups."
+        },
+        "excludeFromPath": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true, the group name is excluded from child field paths. Typically used for structural elements without captions (e.g., caption-less groups). Default: false"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FieldConfig"
+          }
+        },
+        "colSpan": {
+          "type": "number",
+          "description": "Number of columns the item should span in the form layout"
+        }
+      },
+      "required": [
+        "type",
+        "name",
+        "items"
+      ]
+    },
+    "TabbedFieldConfig": {
+      "type": "object",
+      "description": "Tabbed container for organizing fields into tabs",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ],
+          "description": "Field label (string or object with text, visible, location)"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "tabbed"
+          ]
+        },
+        "excludeFromPath": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true, the tabbed element name is excluded from child field paths. Typically used for structural elements without captions. Default: false"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TabFieldConfig"
+          }
+        },
+        "tabPanelOptions": {
+          "type": "object",
+          "description": "DevExtreme TabPanel widget options",
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "type",
+        "name",
+        "items"
+      ]
+    },
+    "TabFieldConfig": {
+      "type": "object",
+      "description": "Individual tab configuration within a tabbed container",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "tab"
+          ]
+        },
+        "tabTitle": {
+          "type": "string",
+          "description": "Tab header title"
+        },
+        "tabIcon": {
+          "type": "string",
+          "description": "Icon to display in the tab header"
+        },
+        "tabColCount": {
+          "type": "number",
+          "description": "Number of columns for field layout in this tab"
+        },
+        "excludeFromPath": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true, the tab element name is excluded from child field paths. Typically used for structural elements without captions. Default: false"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FieldConfig"
+          }
+        }
+      },
+      "required": [
+        "type",
+        "name"
+      ]
+    },
+    "StepperFieldConfig": {
+      "type": "object",
+      "description": "Stepper container for multi-step form wizards",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ],
+          "description": "Field label (string or object with text, visible, location)"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "stepper"
+          ]
+        },
+        "excludeFromPath": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true, the stepper element name is excluded from child field paths. Typically used for structural elements without captions. Default: false"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StepFieldConfig"
+          }
+        },
+        "stepperOptions": {
+          "type": "object",
+          "description": "DevExtreme Stepper widget options",
+          "additionalProperties": false,
+          "properties": {
+            "showNavButtons": {
+              "type": "boolean",
+              "description": "Whether to show navigation buttons"
+            },
+            "showTitle": {
+              "type": "boolean",
+              "description": "Whether to show step titles"
+            },
+            "orientation": {
+              "enum": [
+                "horizontal",
+                "vertical"
+              ],
+              "description": "Stepper orientation"
+            }
+          }
+        }
+      },
+      "required": [
+        "type",
+        "name",
+        "items"
+      ]
+    },
+    "StepFieldConfig": {
+      "type": "object",
+      "description": "Individual step configuration within a stepper container",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "step"
+          ]
+        },
+        "stepTitle": {
+          "type": "string",
+          "description": "Step title displayed in the stepper"
+        },
+        "stepIcon": {
+          "type": "string",
+          "description": "Icon to display in the step header"
+        },
+        "excludeFromPath": {
+          "type": "boolean",
+          "default": false,
+          "description": "When true, the step element name is excluded from child field paths. Typically used for structural elements without captions. Default: false"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FieldConfig"
+          }
+        }
+      },
+      "required": [
+        "type",
+        "name"
+      ]
+    },
+    "ButtonFieldConfig": {
+      "type": "object",
+      "description": "Button field configuration with click handlers",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ],
+          "description": "Field label (string or object with text, visible, location)"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "button"
+          ]
+        },
+        "buttonOptions": {
+          "type": "object",
+          "description": "DevExtreme Button widget options",
+          "additionalProperties": false,
+          "properties": {
+            "text": {
+              "type": "string",
+              "description": "Button text label"
+            },
+            "icon": {
+              "type": "string",
+              "description": "Icon to display on the button"
+            },
+            "type": {
+              "type": "string",
+              "description": "Button style type (normal, success, default, danger, back)",
+              "enum": [
+                "normal",
+                "success",
+                "default",
+                "danger",
+                "back"
+              ]
+            },
+            "stylingMode": {
+              "type": "string",
+              "description": "Button styling mode (text, outlined, contained)",
+              "enum": [
+                "text",
+                "outlined",
+                "contained"
+              ]
+            },
+            "onClick": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "handler": {
+                      "type": "string"
+                    },
+                    "params": {
+                      "type": "object",
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "handler"
+                  ]
+                }
+              ],
+              "description": "Click handler function name or configuration"
+            }
+          }
+        }
+      },
+      "required": [
+        "type",
+        "buttonOptions"
+      ]
+    },
+    "EmptyFieldConfig": {
+      "type": "object",
+      "description": "Empty placeholder field for layout spacing",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ],
+          "description": "Field label (string or object with text, visible, location)"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "empty"
+          ]
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "InfoFieldConfig": {
+      "type": "object",
+      "description": "Information box field configuration for displaying alerts, warnings, and info messages",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "label": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "visible": {
+                  "type": "boolean"
+                },
+                "location": {
+                  "enum": [
+                    "left",
+                    "top"
+                  ]
+                }
+              }
+            }
+          ],
+          "description": "Field label (string or object with text, visible, location)"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "width": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "minHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "maxHeight": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "validationRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationRule"
+          }
+        },
+        "visibleIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "disabledIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "readonlyIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "requiredIf": {
+          "$ref": "#/definitions/ConditionalExpression"
+        },
+        "allowEditing": {
+          "type": "boolean",
+          "description": "Whether the field is editable in grid/tree column context"
+        },
+        "allowSorting": {
+          "type": "boolean",
+          "description": "Whether the column is sortable in grid/tree context"
+        },
+        "allowFiltering": {
+          "type": "boolean",
+          "description": "Whether the column is filterable in grid/tree context"
+        },
+        "type": {
+          "enum": [
+            "info"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "description": "Info box text content"
+        },
+        "variant": {
+          "enum": [
+            "info",
+            "success",
+            "warning",
+            "error"
+          ],
+          "description": "Visual style variant (default: 'info')"
+        },
+        "icon": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "Show icon (true = auto variant icon, string = custom icon name)"
+        },
+        "dismissible": {
+          "type": "boolean",
+          "description": "Whether the info box can be dismissed/closed"
+        },
+        "html": {
+          "type": "string",
+          "description": "HTML content to display (takes precedence over text if both provided)"
+        },
+        "cssClass": {
+          "type": "string"
+        },
+        "helpText": {
+          "type": "string"
+        },
+        "readOnly": {
+          "type": "boolean"
+        },
+        "colSpan": {
+          "type": "number",
+          "description": "Number of columns the item should span in the form layout"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "FieldConfig": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/TextFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/NumberFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/DateFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/DateTimeFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/TimeFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/DateRangeFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/BooleanFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/SwitchFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/DropdownFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/TagBoxFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/RadioGroupFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/SliderFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/RangeSliderFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/TextAreaFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/HtmlEditorFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/ColorBoxFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/AutocompleteFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/LookupFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/CalendarFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/GridFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/TreeFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/FormFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/GroupFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/TabbedFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/TabFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/StepperFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/StepFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/ButtonFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/EmptyFieldConfig"
+        },
+        {
+          "$ref": "#/definitions/InfoFieldConfig"
+        }
+      ],
+      "discriminator": {
+        "propertyName": "type"
+      }
+    }
+  }
+}

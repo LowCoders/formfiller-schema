@@ -1,0 +1,165 @@
+{
+  "title": "Multi-Step Registration Form",
+  "description": "Example form using the DevExtreme Stepper component",
+  "slug": "stepper-registration-example",
+  "itemConfig": {
+    "type": "form",
+    "items": [
+      {
+        "type": "stepper",
+        "name": "registrationWizard",
+        "stepperOptions": {
+          "showNavButtons": true,
+          "showTitle": true,
+          "orientation": "horizontal"
+        },
+        "items": [
+          {
+            "type": "step",
+            "name": "personalInfo",
+            "stepTitle": "Personal Information",
+            "stepIcon": "user",
+            "items": [
+              {
+                "type": "text",
+                "name": "firstName",
+                "title": "First Name",
+                "validationRules": [
+                  {
+                    "type": "required",
+                    "message": "First name is required"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "name": "lastName",
+                "title": "Last Name",
+                "validationRules": [
+                  {
+                    "type": "required",
+                    "message": "Last name is required"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "name": "email",
+                "title": "Email Address",
+                "editorOptions": {
+                  "mode": "email"
+                },
+                "validationRules": [
+                  {
+                    "type": "required",
+                    "message": "Email is required"
+                  },
+                  {
+                    "type": "email",
+                    "message": "Invalid email format"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "step",
+            "name": "accountDetails",
+            "stepTitle": "Account Details",
+            "stepIcon": "key",
+            "items": [
+              {
+                "type": "text",
+                "name": "username",
+                "title": "Username",
+                "validationRules": [
+                  {
+                    "type": "required",
+                    "message": "Username is required"
+                  },
+                  {
+                    "type": "stringLength",
+                    "min": 4,
+                    "message": "Username must be at least 4 characters"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "name": "password",
+                "title": "Password",
+                "editorOptions": {
+                  "mode": "password"
+                },
+                "validationRules": [
+                  {
+                    "type": "required",
+                    "message": "Password is required"
+                  },
+                  {
+                    "type": "stringLength",
+                    "min": 8,
+                    "message": "Password must be at least 8 characters"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "name": "confirmPassword",
+                "title": "Confirm Password",
+                "editorOptions": {
+                  "mode": "password"
+                },
+                "validationRules": [
+                  {
+                    "type": "required",
+                    "message": "Please confirm your password"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "step",
+            "name": "preferences",
+            "stepTitle": "Preferences",
+            "stepIcon": "preferences",
+            "items": [
+              {
+                "type": "selectbox",
+                "name": "language",
+                "title": "Preferred Language",
+                "lookup": {
+                  "dataSource": [
+                    {"id": "en", "name": "English"},
+                    {"id": "hu", "name": "Hungarian"},
+                    {"id": "de", "name": "German"}
+                  ],
+                  "displayExpr": "name",
+                  "valueExpr": "id"
+                }
+              },
+              {
+                "type": "checkbox",
+                "name": "newsletter",
+                "title": "Subscribe to newsletter"
+              },
+              {
+                "type": "checkbox",
+                "name": "termsAccepted",
+                "title": "I accept the terms and conditions",
+                "validationRules": [
+                  {
+                    "type": "required",
+                    "message": "You must accept the terms and conditions"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+

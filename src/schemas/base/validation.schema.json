@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Validation Schema",
+  "description": "Common validation rule definitions",
+  "definitions": {
+    "ValidationRule": {
+      "type": "object",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "enum": ["required", "email", "pattern", "custom"]
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": ["type"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "enum": ["stringLength", "numeric", "range"]
+            },
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": ["type"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "compare"
+            },
+            "comparisonTarget": {
+              "type": "string"
+            },
+            "comparisonType": {
+              "enum": ["==", "!=", ">", "<", ">=", "<="]
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": ["type", "comparisonTarget"]
+        }
+      ]
+    }
+  }
+}
+

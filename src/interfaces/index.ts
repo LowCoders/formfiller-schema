@@ -1,0 +1,748 @@
+// Forward declaration for ConditionalExpression (used in ValidationRule.when)
+export type ConditionalExpression =
+  | { [field: string]: any } // Scalar or array shorthand: { field: value } or { field: [values] } or { field: ['operator', value] }
+  | { and: ConditionalExpression[] } // AND logic
+  | { or: ConditionalExpression[] } // OR logic
+  | { not: ConditionalExpression }; // NOT logic
+
+/**
+ * Unified type for validation condition (same as ConditionalExpression)
+ * Used in ValidationRule.when property
+ */
+export type ValidationCondition = ConditionalExpression;
+
+// Base interfaces
+export interface ValidationRule {
+  type: // Alap típusok (DevExtreme kompatibilis)
+    | 'required'
+    | 'stringLength'
+    | 'arrayLength'
+    | 'range'
+    | 'pattern'
+    | 'email'
+    | 'numeric'
+    | 'compare'
+    | 'custom'
+    // Kiterjesztett típusok
+    | 'async' // Külső API validáció
+    | 'crossField' // Több mező összehasonlítása
+    | 'computed' // Számítás validáció nélkül (scoring, összegzés)
+    | 'temporal' // Időfüggő validáció
+    | 'plugin' // Pluginható validáció
+    | 'arrayLength'; // Tömb méret validáció (min/max elemszám)
+
+  message?: string;
+
+  // === ÚJ: Conditional kifejezés támogatás ===
+  /**
+   * Conditional expression that determines when this validation rule should be applied.
+   * Supports the same 3 specification modes as visibleIf:
+   * 1. Simple equality: { field: value }
+   * 2. Implicit "in": { field: [value1, value2] }
+   * 3. Explicit operator: { field: ['operator', value] }
+   * Plus logical operators: and, or, not
+   */
+  when?: ValidationCondition;
+
+  // stringLength & range properties
+  min?: number;
+  max?: number;
+
+  // pattern property
+  pattern?: string | RegExp;
+
+  // compare properties
+  comparisonTarget?: string;
+  comparisonType?: '==' | '!=' | '<' | '>' | '<=' | '>=';
+
+  // custom property
+  validationCallback?: string | ((value: any, context: any) => boolean | Promise<boolean>);
+
+  // Async validation (external API)
+  apiEndpoint?: string;
+  apiMethod?: 'GET' | 'POST';
+  apiPayload?: Record<string, any>;
+  apiTimeout?: number;
+
+  // CrossField validation
+  targetFields?: string[];
+  crossFieldValidator?:
+    | string
+    | { name: string; params?: Record<string, any> }
+    | ((values: Record<string, any>, context: any) => boolean);
+
+  // Computed (for calculations)
+  compute?: string | ((values: Record<string, any>, context: any) => any);
+  returnToFrontend?: boolean;
+  storeResult?: boolean;
+
+  // Computed validation subtypes
+  subtype?: 'exactMatch' | 'arrayMatch' | 'numericMatch' | 'keywordMatch' | 'custom';
+  correctAnswer?: any;
+  points?: number;
+  penalty?: number;
+  partialCredit?: boolean; // Allow partial points for partial correctness
+  tolerance?: number; // For numericMatch
+  keywords?: {
+    required?: string[];
+    optional?: string[];
+  };
+  minLength?: number; // For keywordMatch
+  customEvaluator?: string; // Custom computed function name
+
+  // Temporal validation
+  validFrom?: Date | string;
+  validUntil?: Date | string;
+  schedule?: string; // cron expression
+  timezone?: string;
+  gracePeriod?: number; // ms
+
+  // Plugin validation
+  pluginName?: string;
+  pluginConfig?: Record<string, any>;
+
+  // DEPRECATED (for backward compatibility)
+  value?: number; // migrated to min/max
+  validator?: string; // migrated to validationCallback
+}
+
+/**
+ * Validation rule group with logical operators
+ * Allows complex validation logic: (A AND B) OR (C AND D)
+ *
+ * Supports two formats:
+ * 1. Legacy format: { operator: 'or', rules: [...] }
+ * 2. New format: { or: [...], groupMessage: '...' }
+ */
+export interface ValidationRuleGroup {
+  // Legacy format
+  operator?: 'and' | 'or' | 'not';
+  rules?: Array<ValidationRule | ValidationRuleGroup>;
+  message?: string; // Custom message for the entire group (legacy)
+
+  // New format (JSON Schema compatible)
+  and?: Array<ValidationRule | ValidationRuleGroup>;
+  or?: Array<ValidationRule | ValidationRuleGroup>;
+  not?: ValidationRule | ValidationRuleGroup;
+  groupMessage?: string; // Custom message for the entire group (new format)
+
+  // Common
+  stopOnFirstError?: boolean; // Stop evaluating on first error
+}
+
+/**
+ * Combined type for validation rules
+ */
+export type ValidationRuleOrGroup = ValidationRule | ValidationRuleGroup;
+
+/**
+ * @deprecated Use ConditionalExpression with object notation instead.
+ * Legacy explicit format: { field: string, operator: string, value: any }
+ * New unified format: { field: ['operator', value] }
+ */
+export interface ConditionalField {
+  field: string;
+  operator:
+    | '=='
+    | '!='
+    | '>'
+    | '<'
+    | '>='
+    | '<='
+    | 'in'
+    | 'notIn'
+    | 'contains'
+    | 'startswith'
+    | 'endswith';
+  value: any;
+  logicalOperator?: 'and' | 'or';
+}
+
+// ConditionalExpression is now defined at the top (before ValidationRule) for forward declaration
+
+export interface LookupConfig {
+  dataSource: any[];
+  displayExpr?: string;
+  valueExpr?: string;
+  setCellValue?: boolean;
+  dependsOn?: string[]; // Mezők, amelyektől ez a lookup függ
+}
+
+export interface BaseFieldConfig {
+  name?: string;
+  dataField?: string; // DevExtreme data binding field name (alias for name)
+  label?:
+    | string
+    | {
+        text?: string;
+        visible?: boolean;
+        showColon?: boolean;
+        location?: 'left' | 'right' | 'top';
+        alignment?: 'left' | 'right' | 'center';
+        [key: string]: any; // További DevExtreme label opciók
+      };
+
+  // Állapot
+  visible?: boolean;
+  disabled?: boolean;
+  readOnly?: boolean;
+
+  // Layout
+  colSpan?: number; // Number of columns the field should span in the form layout
+
+  // Érték
+  value?: any; // Kezdeti/alapértelmezett érték
+
+  // Választó mezők opciók (radiogroup, tagbox, dropdown, selectbox, lookup)
+  // Megjegyzés: Container típusoknál (group, tabbed) ez az 'items' felüldefiniálódik FieldConfig[]-re
+  options?: Array<string | { value: any; text?: string; [key: string]: any }>;
+  valueExpr?: string; // Default: 'value'
+  displayExpr?: string; // Default: 'text'
+
+  // Méret
+  width?: number | string;
+  height?: number | string;
+  minHeight?: number | string;
+  maxHeight?: number | string;
+
+  // UI
+  placeholder?: string;
+  showClearButton?: boolean;
+
+  // Validáció
+  validationRules?: ValidationRuleOrGroup[];
+  visibleIf?: ConditionalExpression;
+  disabledIf?: ConditionalExpression;
+  readonlyIf?: ConditionalExpression;
+  requiredIf?: ConditionalExpression;
+  validationMessageMode?: 'always' | 'auto'; // When to display validation messages
+  validationMessagePosition?: 'bottom' | 'top' | 'left' | 'right'; // Where to display validation messages
+
+  // Útvonal alapú hivatkozások
+  dependentFields?: string[];
+  references?: string[];
+
+  // UI testreszabás
+  cssClass?: string;
+  helpText?: string;
+  stylingMode?: 'outlined' | 'underlined' | 'filled'; // Visual styling mode
+
+  // Accessibility
+  tabIndex?: number; // Tab navigation order
+  hint?: string; // Tooltip text
+  accessKey?: string; // Keyboard shortcut
+  inputAttr?: Record<string, any>; // HTML attributes (id, data-*, aria-*)
+
+  // Lookup
+  lookup?: LookupConfig;
+
+  // Speciális konfigurációk
+  editMode?: 'form' | 'cell' | 'row' | 'batch' | 'popup'; // Grid és Tree szerkesztési mód
+
+  // Grid/Tree oszlop specifikus tulajdonságok
+  allowEditing?: boolean; // Szerkeszthető-e az oszlop grid/tree kontextusban
+  allowSorting?: boolean; // Rendezhető-e az oszlop
+  allowFiltering?: boolean; // Szűrhető-e az oszlop
+
+  // DevExtreme általános editor opciók
+  // Bármilyen típus-specifikus beállítás, amit a DevExtreme editor támogat
+  editorOptions?: Record<string, any>;
+}
+
+// Field type definitions
+export type FieldType =
+  // Data types
+  | 'autocomplete'
+  | 'calendar'
+  | 'checkbox'
+  | 'colorbox'
+  | 'date'
+  | 'daterange'
+  | 'dropdown'
+  | 'dropdownbox'
+  | 'htmleditor'
+  | 'lookup'
+  | 'number'
+  | 'radiogroup'
+  | 'rangeslider'
+  | 'selectbox'
+  | 'slider'
+  | 'switch'
+  | 'tagbox'
+  | 'text'
+  | 'textarea'
+  | 'boolean'
+  | 'time'
+  | 'datetime'
+  // Complex types
+  | 'grid'
+  | 'tree'
+  | 'form'
+  // Structural types
+  | 'group'
+  | 'tabbed'
+  | 'tab'
+  | 'stepper'
+  | 'step'
+  | 'button'
+  | 'empty'
+  | 'info';
+
+// Number format configuration for DevExtreme NumberBox
+export interface NumberFormat {
+  type?:
+    | 'currency'
+    | 'percent'
+    | 'decimal'
+    | 'fixedPoint'
+    | 'exponential'
+    | 'thousands'
+    | 'millions'
+    | 'billions'
+    | 'trillions'
+    | 'largeNumber';
+  precision?: number;
+  currency?: string; // Currency code (e.g., "USD", "EUR", "HUF")
+}
+
+// Data field configs
+export interface TextFieldConfig extends BaseFieldConfig {
+  type: 'text';
+  mode?: 'text' | 'password' | 'email' | 'tel' | 'url';
+  maxLength?: number;
+  // DevExtreme TextBox mask support
+  mask?: string; // Mask pattern (e.g., "+1 (000) 000-0000")
+  maskRules?: Record<string, RegExp>; // Custom mask rules (e.g., { X: /[02-9]/ })
+  maskChar?: string; // Placeholder character for mask (default: '_')
+  maskInvalidMessage?: string; // Error message for invalid mask input
+  useMaskedValue?: boolean; // Whether to use the masked value (default: false)
+}
+
+export interface NumberFieldConfig extends BaseFieldConfig {
+  type: 'number';
+  min?: number;
+  max?: number;
+  step?: number;
+  showSpinButtons?: boolean;
+  // DevExtreme NumberBox format support
+  format?: string | NumberFormat; // Number format (string pattern or format object)
+}
+
+export interface DateFieldConfig extends BaseFieldConfig {
+  type: 'date';
+  min?: string | Date;
+  max?: string | Date;
+  displayFormat?: string;
+  format?: string;
+  pickerType?: 'calendar' | 'list' | 'native' | 'rollers';
+  useMaskBehavior?: boolean;
+  openOnFieldClick?: boolean;
+  dateSerializationFormat?: string;
+  calendarOptions?: Record<string, any>;
+}
+
+export interface DateTimeFieldConfig extends BaseFieldConfig {
+  type: 'datetime';
+  min?: string | Date;
+  max?: string | Date;
+  displayFormat?: string;
+  format?: string;
+  pickerType?: 'calendar' | 'list' | 'native' | 'rollers';
+  useMaskBehavior?: boolean;
+  openOnFieldClick?: boolean;
+  dateSerializationFormat?: string;
+  calendarOptions?: Record<string, any>;
+}
+
+export interface TimeFieldConfig extends BaseFieldConfig {
+  type: 'time';
+  min?: string;
+  max?: string;
+  displayFormat?: string;
+  format?: string;
+  interval?: number; // Minutes interval (5, 10, 15, 30, 60)
+  pickerType?: 'calendar' | 'list' | 'native' | 'rollers';
+}
+
+export interface DateRangeFieldConfig extends BaseFieldConfig {
+  type: 'daterange';
+  min?: string | Date;
+  max?: string | Date;
+  startDateExpr?: string;
+  endDateExpr?: string;
+}
+
+export interface BooleanFieldConfig extends BaseFieldConfig {
+  type: 'boolean' | 'checkbox';
+  text?: string;
+}
+
+export interface SwitchFieldConfig extends BaseFieldConfig {
+  type: 'switch';
+  switchedOnText?: string;
+  switchedOffText?: string;
+}
+
+export interface DropdownFieldConfig extends BaseFieldConfig {
+  type: 'dropdown' | 'selectbox';
+  lookup?: LookupConfig;
+  searchEnabled?: boolean;
+  acceptCustomValue?: boolean;
+  showDropDownButton?: boolean;
+  grouped?: boolean; // Enable grouped items
+  noDataText?: string; // Text when no data available
+  wrapItemText?: boolean; // Wrap long text in items
+  dropDownOptions?: Record<string, any>; // Dropdown widget configuration
+}
+
+export interface TagBoxFieldConfig extends BaseFieldConfig {
+  type: 'tagbox';
+  lookup?: LookupConfig;
+  searchEnabled?: boolean;
+  acceptCustomValue?: boolean;
+  showDropDownButton?: boolean;
+  showSelectionControls?: boolean; // Show "Select All" checkbox
+  applyValueMode?: 'instantly' | 'useButtons'; // When to apply selected values
+  maxDisplayedTags?: number; // Max visible tags before "+N"
+  selectAllMode?: 'allPages' | 'page'; // Select all behavior
+  hideSelectedItems?: boolean; // Hide selected items from dropdown
+  maxFilterQueryLength?: number; // Max search query length
+  selectAllText?: string; // Custom "Select All" text
+}
+
+export interface RadioGroupFieldConfig extends BaseFieldConfig {
+  type: 'radiogroup';
+  lookup?: LookupConfig;
+  layout?: 'horizontal' | 'vertical';
+}
+
+export interface SliderFieldConfig extends BaseFieldConfig {
+  type: 'slider';
+  min?: number; // Minimum value
+  max?: number; // Maximum value
+  step?: number; // Increment step
+  showRange?: boolean; // Show range indicator
+  tooltip?: {
+    enabled?: boolean; // Use 'enabled' NOT 'isShown' - show/hide tooltip
+    format?: string; // Number format (e.g., "#0.##")
+    showMode?: 'always' | 'onHover'; // When to display tooltip
+  };
+}
+
+export interface RangeSliderFieldConfig extends BaseFieldConfig {
+  type: 'rangeslider';
+  min?: number;
+  max?: number;
+  step?: number;
+  start?: number;
+  end?: number;
+}
+
+export interface TextAreaFieldConfig extends BaseFieldConfig {
+  type: 'textarea';
+  maxLength?: number;
+  autoResizeEnabled?: boolean;
+}
+
+export interface HtmlEditorFieldConfig extends BaseFieldConfig {
+  type: 'htmleditor';
+  toolbar?: any;
+  mediaResizing?: any;
+}
+
+export interface ColorBoxFieldConfig extends BaseFieldConfig {
+  type: 'colorbox';
+  applyValueMode?: 'instantly' | 'useButtons';
+  editAlphaChannel?: boolean;
+}
+
+export interface AutocompleteFieldConfig extends BaseFieldConfig {
+  type: 'autocomplete';
+  lookup?: LookupConfig;
+  minSearchLength?: number;
+  searchTimeout?: number;
+}
+
+export interface LookupFieldConfig extends BaseFieldConfig {
+  type: 'lookup';
+  lookup: LookupConfig; // Required for lookup type
+  searchEnabled?: boolean;
+  minSearchLength?: number;
+  searchTimeout?: number;
+}
+
+export interface CalendarFieldConfig extends BaseFieldConfig {
+  type: 'calendar';
+  min?: string | Date;
+  max?: string | Date;
+  firstDayOfWeek?: number;
+  zoomLevel?: 'month' | 'year' | 'decade' | 'century';
+}
+
+// Form-specific preferences and settings
+export interface FormPreferences {
+  addSaveBtn?: boolean; // Automatically add save button at the end of form
+  saveLimit?: number | null; // Maximum number of saves allowed (quota)
+  saveUrl?: string; // Optional custom save endpoint URL
+  computedRuleResults?: 'none' | 'score' | 'detailed'; // How to display computed validation results
+  storeComputedResults?: boolean; // Whether to store computed results in form data
+}
+
+// Forward declaration for recursive types
+export interface ItemConfig {
+  id?: string; // Optional - backend provides _id instead
+  _id?: string; // MongoDB ObjectId (optional in tests, required - provided by backend in runtime)
+  title?: string; // Optional - backend provides from top-level title
+  label?: string; // Display label (legacy, prefer title)
+  description?: string;
+  type?: 'grid' | 'tree' | 'form'; // Optional - backend provides from top-level type
+  configId?: string; // Slug-objectId formátum vagy ObjectId
+  slug?: string; // URL-friendly slug
+  name?: string;
+  items: FieldConfig[]; // ← Changed from columns to items
+  addSaveBtn?: boolean; // Add save button at the end of form (legacy, prefer preferences.addSaveBtn)
+  validationRules?: ValidationRuleOrGroup[]; // Form-level validation rules
+  computedRules?: ComputedRule[]; // Form-level computed rules for aggregation
+  dataTransformation?: (data: any) => any;
+  toolbar?: {
+    items: Array<{
+      location: 'before' | 'after';
+      widget: 'dxButton' | 'dxSelectBox';
+      options: any;
+    }>;
+  };
+  dataSource?: any;
+  editing?: {
+    allowAdding?: boolean;
+    allowUpdating?: boolean;
+    allowDeleting?: boolean;
+    allowRefreshing?: boolean;
+    confirmDelete?: boolean;
+    useIcons?: boolean;
+    mode?: 'batch' | 'cell' | 'row' | 'form' | 'popup';
+  };
+  export?: {
+    enabled?: boolean; // Export engedélyezve
+    fileName?: string; // Default fájlnév
+    formats?: ('xlsx' | 'pdf')[]; // Formátumok
+  };
+  height?: string | number;
+  minHeight?: string | number;
+  maxHeight?: string | number;
+  dataPath?: string;
+  onRowClick?: string;
+  onCellClick?: string;
+  onRowDblClick?: string;
+  keyExpr?: string; // For tree
+  parentIdExpr?: string; // For tree
+
+  // DevExtreme Tree/Grid-specifikus megjelenítési opciók
+  autoExpandAll?: boolean; // Automatikus kibontás minden tree node-nál
+  showRowLines?: boolean; // Sorok közötti vonalak megjelenítése
+  showBorders?: boolean; // Szegélyek megjelenítése a grid/tree körül
+  columnAutoWidth?: boolean; // Oszlopok automatikus szélessége
+  allowColumnReordering?: boolean; // Oszlopok átrendezésének engedélyezése
+  allowColumnResizing?: boolean; // Oszlopok átméretezésének engedélyezése
+  showColumnHeaders?: boolean; // Oszlop fejlécek megjelenítése
+}
+
+// Root-level form configuration object
+export interface FormConfig {
+  _id?: string; // MongoDB ObjectId
+  title: string; // Form title
+  description?: string; // Form description
+  slug?: string; // URL-friendly slug
+  preferences?: FormPreferences; // Form-specific preferences
+  itemConfig: ItemConfig; // Item configuration (formerly ViewConfig)
+  isActive?: boolean; // Whether the form is active
+  createdBy?: string; // User ID who created the form
+  tags?: string[]; // Tags for categorization
+  version?: string; // Schema version
+  isPublic?: boolean; // Whether the form is public
+  allowedUsers?: string[]; // Array of user IDs with access
+  createdAt?: Date; // Creation timestamp
+  updatedAt?: Date; // Update timestamp
+}
+
+// Backward compatibility alias
+/** @deprecated Use ItemConfig instead */
+export type ViewConfig = ItemConfig;
+
+// Forward declaration for recursive types
+
+// Complex field configs
+export interface GridFieldConfig extends BaseFieldConfig {
+  type: 'grid';
+  config: ItemConfig; // ← Changed from gridConfig to config
+}
+
+export interface TreeFieldConfig extends BaseFieldConfig {
+  type: 'tree';
+  config: ItemConfig; // ← Changed from treeConfig to config
+}
+
+export interface FormFieldConfig extends BaseContainerConfig {
+  type: 'form';
+  config?: ItemConfig | FieldConfig[]; // ← Changed from formConfig to config
+}
+
+// Base container interface for structural fields
+export interface BaseContainerConfig extends BaseFieldConfig {
+  items?: FieldConfig[];
+  excludeFromPath?: boolean; // ✅ When true, the group/container element name is excluded from child field paths. Typically used for structural elements without captions. Default: false
+}
+
+// Structural field configs
+export interface GroupFieldConfig extends BaseContainerConfig {
+  type: 'group';
+  name?: string; // Optional - can be omitted for anonymous groups
+  caption?: string; // Group header caption text
+  captionRender?: string; // Custom render function name for caption
+  colCount?: number | 'auto'; // Use this for multi-column layouts (default: 1)
+}
+
+export interface TabbedFieldConfig extends BaseContainerConfig {
+  type: 'tabbed';
+  name?: string; // Optional - can be omitted for anonymous tabbed containers
+  tabPanelOptions?: any;
+  // items already exists in BaseContainerConfig
+}
+
+export interface TabFieldConfig extends BaseContainerConfig {
+  type: 'tab';
+  name?: string; // Optional - can be omitted for anonymous tabs
+  tabTitle?: string;
+  tabIcon?: string;
+  tabColCount?: number;
+  // items already exists in BaseContainerConfig
+}
+
+export interface StepperFieldConfig extends BaseContainerConfig {
+  type: 'stepper';
+  name?: string; // Optional - can be omitted for anonymous steppers
+  stepperOptions?: {
+    showNavButtons?: boolean;
+    showTitle?: boolean;
+    orientation?: 'horizontal' | 'vertical';
+  };
+  // items already exists in BaseContainerConfig
+}
+
+export interface StepFieldConfig extends BaseContainerConfig {
+  type: 'step';
+  name?: string; // Optional - can be omitted for anonymous steps
+  stepTitle?: string;
+  stepIcon?: string;
+  // items already exists in BaseContainerConfig
+}
+
+export interface ButtonFieldConfig extends Omit<BaseFieldConfig, 'stylingMode'> {
+  type: 'button';
+  // Legacy properties (prefer buttonOptions)
+  text?: string; // Button text (use buttonOptions.text instead)
+  title?: string; // Button title/tooltip
+  icon?: string; // Button icon (use buttonOptions.icon instead)
+  buttonType?: 'normal' | 'success' | 'default' | 'danger' | 'back'; // Use buttonOptions.type instead
+  stylingMode?: 'text' | 'outlined' | 'contained'; // Button styling mode (different from input fields)
+  action?: ((...args: any[]) => void) | string; // Click action handler
+  horizontalAlignment?: 'left' | 'center' | 'right'; // Horizontal alignment in form
+  verticalAlignment?: 'top' | 'center' | 'bottom'; // Vertical alignment in form
+  buttonOptions?: {
+    text?: string;
+    icon?: string;
+    type?: 'normal' | 'success' | 'default' | 'danger' | 'back';
+    stylingMode?: 'text' | 'outlined' | 'contained';
+    width?: number | string;
+    height?: number | string;
+    disabled?: boolean;
+    onClick?:
+      | string
+      | {
+          handler: string;
+          params?: Record<string, any>;
+        };
+  };
+}
+
+export interface EmptyFieldConfig extends BaseFieldConfig {
+  type: 'empty';
+}
+
+export interface InfoFieldConfig extends BaseFieldConfig {
+  type: 'info';
+  text?: string; // Info box text content (plain text, supports \n for line breaks)
+  html?: string; // HTML content to display (takes precedence over text if both provided)
+  variant?: 'info' | 'success' | 'warning' | 'error'; // Visual style variant
+  icon?: boolean | string; // Show icon (true = auto variant icon, string = custom icon name)
+  dismissible?: boolean; // Whether the info box can be dismissed/closed
+}
+
+// Union type for all field configs
+// Form-level computed rule for field evaluation and aggregation
+export interface ComputedRule {
+  id: string;
+  name: string;
+  type: 'field' | 'aggregate'; // Field-level or aggregate computation
+
+  // Field type properties (when type === 'field')
+  fieldName?: string; // Target field name (e.g., "networking.q1_http_port")
+  subtype?: 'exactMatch' | 'arrayMatch' | 'numericMatch' | 'keywordMatch' | 'custom';
+  correctAnswer?: any; // Expected correct answer
+  keywords?: {
+    // For keywordMatch subtype
+    required?: string[];
+    optional?: string[];
+  };
+  points?: number; // Points awarded for correct answer
+  penalty?: number; // Points deducted for incorrect answer
+  partialCredit?: boolean; // Allow partial credit for partially correct answers
+  tolerance?: number; // Tolerance for numeric comparisons
+  minLength?: number; // Minimum length for text answers
+  message?: string; // Error message for incorrect answer
+
+  // Aggregate type properties (when type === 'aggregate')
+  inputFields?: string[]; // Field names to aggregate
+  categoryMapping?: Record<string, string>; // Map fields to categories
+  evaluationRules?: Array<{
+    // Rules for evaluating aggregate score
+    condition: ConditionalExpression;
+    result: string;
+    message: string;
+  }>;
+
+  // Common properties
+  returnToFrontend?: boolean; // Whether to send results to frontend
+  storeResult?: boolean; // Whether to store results in database
+}
+
+export type FieldConfig =
+  | TextFieldConfig
+  | NumberFieldConfig
+  | DateFieldConfig
+  | DateTimeFieldConfig
+  | TimeFieldConfig
+  | DateRangeFieldConfig
+  | BooleanFieldConfig
+  | SwitchFieldConfig
+  | DropdownFieldConfig
+  | TagBoxFieldConfig
+  | RadioGroupFieldConfig
+  | SliderFieldConfig
+  | RangeSliderFieldConfig
+  | TextAreaFieldConfig
+  | HtmlEditorFieldConfig
+  | ColorBoxFieldConfig
+  | AutocompleteFieldConfig
+  | LookupFieldConfig
+  | CalendarFieldConfig
+  | GridFieldConfig
+  | TreeFieldConfig
+  | FormFieldConfig
+  | GroupFieldConfig
+  | TabbedFieldConfig
+  | TabFieldConfig
+  | StepperFieldConfig
+  | StepFieldConfig
+  | ButtonFieldConfig
+  | EmptyFieldConfig
+  | InfoFieldConfig;

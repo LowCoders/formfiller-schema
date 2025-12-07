@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Common Field Properties",
+  "description": "Shared properties used across all field types",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Unique identifier for the field"
+    },
+    "title": {
+      "type": "string",
+      "description": "Display label for the field"
+    },
+    "visible": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the field is visible"
+    },
+    "disabled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the field is disabled"
+    },
+    "readOnly": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the field is read-only"
+    },
+    "helpText": {
+      "type": "string",
+      "description": "Help text to display for the field"
+    },
+    "placeholder": {
+      "type": "string",
+      "description": "Placeholder text for the field"
+    },
+    "validationRules": {
+      "type": "array",
+      "description": "Validation rules for the field",
+      "items": {
+        "type": "object"
+      }
+    },
+    "visibleIf": {
+      "type": "object",
+      "description": "Conditional visibility rules"
+    },
+    "disabledIf": {
+      "type": "object",
+      "description": "Conditional disabled rules"
+    },
+    "readonlyIf": {
+      "type": "object",
+      "description": "Conditional readonly rules"
+    }
+  },
+  "required": ["name"]
+}
+
