@@ -38,8 +38,8 @@
     "validation",
     "devextreme"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": "Vivi and Sam <lowcoders@protonmail.com>",
+  "license": "MIT",
   "dependencies": {
     "ajv": "^8.12.0"
   },
