@@ -6,7 +6,6 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc && mkdir -p dist/schemas && cp src/schemas/*.json dist/schemas/ && npm run transform:schema && npm run generate:monaco",
-    "prepare": "npm run build",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
