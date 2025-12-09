@@ -1,55 +1,55 @@
 # FormFiller Schema
 
-Közös séma definíciók a FormFiller alkalmazáshoz. TypeScript típusok és JSON Schema validáció a frontend és backend számára.
+Shared schema definitions for the FormFiller application. TypeScript types and JSON Schema validation for frontend and backend.
 
-## Telepítés
+## Installation
 
 ```bash
 npm install formfiller-schema
 ```
 
-## Gyors Használat
+## Quick Start
 
 ```typescript
 import { FieldConfig, ItemConfig, validateField } from 'formfiller-schema';
 
-// TypeScript típusok használata
+// Using TypeScript types
 const myField: FieldConfig = {
   name: 'firstName',
-  title: 'Keresztnév',
+  title: 'First Name',
   type: 'text',
-  validationRules: [{ type: 'required', message: 'Kötelező mező' }]
+  validationRules: [{ type: 'required', message: 'Required field' }]
 };
 
-// Validáció
+// Validation
 const result = validateField(myField);
 if (!result.valid) {
-  console.error('Validációs hibák:', result.errors);
+  console.error('Validation errors:', result.errors);
 }
 ```
 
-## Fejlesztés
+## Development
 
 ```bash
 # Build
 npm run build
 
-# Disztribúció a többi projektbe
+# Distribute to other projects
 npm run distribute
 ```
 
-## Fő Komponensek
+## Main Components
 
-- **FieldConfig**: Mező konfigurációk (text, number, date, lookup stb.)
-- **ItemConfig**: Nézet konfigurációk (grid, tree, form)
-- **ValidationRule**: DevExtreme-kompatibilis validációs szabályok
-- **SchemaValidator**: Többszintű validáció
-- **SchemaCache**: Gyorsítótárazott validátorok
+- **FieldConfig**: Field configurations (text, number, date, lookup, etc.)
+- **ItemConfig**: View configurations (grid, tree, form)
+- **ValidationRule**: DevExtreme-compatible validation rules
+- **SchemaValidator**: Multi-level validation
+- **SchemaCache**: Cached validators
 
-## Részletes Dokumentáció
+## Detailed Documentation
 
-A teljes API dokumentáció: [formfiller-docs](../formfiller-docs)
+Full documentation: [formfiller-docs](https://lowcoders.github.io/formfiller-docs/)
 
-## Licenc
+## License
 
 ISC

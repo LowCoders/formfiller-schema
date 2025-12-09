@@ -39,7 +39,7 @@ export class SchemaDefaults {
    * Default values for GroupFieldConfig
    */
   static readonly GroupFieldConfig = {
-    colCount: 1, // DevExtreme alapértelmezett
+    colCount: 1, // DevExtreme default
     excludeFromPath: false,
   } as const;
 

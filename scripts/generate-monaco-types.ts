@@ -4,8 +4,8 @@ import * as path from 'path';
 /**
  * Monaco Editor Type Definitions Bundle Generator
  * 
- * Összegyűjti a formfiller-schema TypeScript definíciókat
- * és egy Monaco-kompatibilis bundle-t generál belőle.
+ * Collects formfiller-schema TypeScript definitions
+ * and generates a Monaco-compatible bundle from them.
  */
 
 const distDir = path.join(__dirname, '../dist');
@@ -17,7 +17,7 @@ interface TypeFile {
 }
 
 /**
- * Rekurzívan bejárja a dist könyvtárat és összegyűjti a .d.ts fájlokat
+ * Recursively traverses the dist directory and collects .d.ts files
  */
 function collectTypeFiles(dir: string, baseDir: string = dir): TypeFile[] {
   const files: TypeFile[] = [];
@@ -27,7 +27,7 @@ function collectTypeFiles(dir: string, baseDir: string = dir): TypeFile[] {
     const fullPath = path.join(dir, entry.name);
     
     if (entry.isDirectory()) {
-      // Rekurzív bejárás (generators kihagyása, mert node-only)
+      // Recursive traversal (skip generators as they are node-only)
       if (entry.name !== 'generators') {
         files.push(...collectTypeFiles(fullPath, baseDir));
       }
@@ -42,9 +42,9 @@ function collectTypeFiles(dir: string, baseDir: string = dir): TypeFile[] {
 }
 
 /**
- * Tisztítja a típusdefiníciókat Monaco számára
- * - Eltávolítja az export/import utasításokat
- * - Megtartja a declare kulcsszót
+ * Cleans type definitions for Monaco
+ * - Removes export/import statements
+ * - Keeps the declare keyword
  */
 function cleanTypeDefinition(content: string, filePath: string): string {
   let cleaned = content;
@@ -69,22 +69,22 @@ function cleanTypeDefinition(content: string, filePath: string): string {
 }
 
 /**
- * Generál egy Monaco-kompatibilis type definitions bundle-t
+ * Generates a Monaco-compatible type definitions bundle
  */
 function generateMonacoTypesBundle(): void {
-  console.log('🔧 Monaco Types Bundle generálás...');
+  console.log('🔧 Generating Monaco Types Bundle...');
   
-  // Ellenőrizzük, hogy a dist könyvtár létezik-e
+  // Check if dist directory exists
   if (!fs.existsSync(distDir)) {
-    console.error('❌ A dist könyvtár nem létezik. Futtasd először a build parancsot!');
+    console.error('❌ The dist directory does not exist. Run the build command first!');
     process.exit(1);
   }
 
-  // Típusdefiníciók összegyűjtése
+  // Collect type definitions
   const typeFiles = collectTypeFiles(distDir);
-  console.log(`📦 ${typeFiles.length} típusdefiníció fájl található`);
+  console.log(`📦 Found ${typeFiles.length} type definition files`);
 
-  // Bundle tartalom összeállítása
+  // Build bundle content
   let bundleContent = `/**
  * FormFiller Schema - Monaco Editor Type Definitions Bundle
  * 
@@ -95,13 +95,13 @@ function generateMonacoTypesBundle(): void {
 declare module 'formfiller-schema' {
 `;
 
-  // Interfaces fájl tartalma (ez a legfontosabb)
+  // Interfaces file content (this is the most important)
   const interfacesFile = typeFiles.find(f => f.path === 'interfaces/index.d.ts' || f.path === 'interfaces\\index.d.ts');
   if (interfacesFile) {
     const cleaned = cleanTypeDefinition(interfacesFile.content, interfacesFile.path);
     bundleContent += '\n' + cleaned + '\n';
   } else {
-    console.warn('⚠️  interfaces/index.d.ts nem található!');
+    console.warn('⚠️  interfaces/index.d.ts not found!');
   }
 
   // Core utilities (optional)
@@ -115,17 +115,16 @@ declare module 'formfiller-schema' {
 
   bundleContent += '\n}\n';
 
-  // Fájl írása
+  // Write file
   fs.writeFileSync(outputFile, bundleContent, 'utf-8');
-  console.log(`✅ Monaco types bundle generálva: ${outputFile}`);
-  console.log(`📊 Méret: ${(bundleContent.length / 1024).toFixed(2)} KB`);
+  console.log(`✅ Monaco types bundle generated: ${outputFile}`);
+  console.log(`📊 Size: ${(bundleContent.length / 1024).toFixed(2)} KB`);
 }
 
-// Script futtatása
+// Run script
 try {
   generateMonacoTypesBundle();
 } catch (error) {
-  console.error('❌ Hiba történt a Monaco types bundle generálása közben:', error);
+  console.error('❌ Error occurred while generating Monaco types bundle:', error);
   process.exit(1);
 }
-

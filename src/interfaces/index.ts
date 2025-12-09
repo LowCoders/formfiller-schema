@@ -13,7 +13,7 @@ export type ValidationCondition = ConditionalExpression;
 
 // Base interfaces
 export interface ValidationRule {
-  type: // Alap típusok (DevExtreme kompatibilis)
+  type: // Basic types (DevExtreme compatible)
     | 'required'
     | 'stringLength'
     | 'arrayLength'
@@ -23,17 +23,17 @@ export interface ValidationRule {
     | 'numeric'
     | 'compare'
     | 'custom'
-    // Kiterjesztett típusok
-    | 'async' // Külső API validáció
-    | 'crossField' // Több mező összehasonlítása
-    | 'computed' // Számítás validáció nélkül (scoring, összegzés)
-    | 'temporal' // Időfüggő validáció
-    | 'plugin' // Pluginható validáció
-    | 'arrayLength'; // Tömb méret validáció (min/max elemszám)
+    // Extended types
+    | 'async' // External API validation
+    | 'crossField' // Multiple field comparison
+    | 'computed' // Calculation without validation (scoring, aggregation)
+    | 'temporal' // Time-dependent validation
+    | 'plugin' // Pluggable validation
+    | 'arrayLength'; // Array size validation (min/max element count)
 
   message?: string;
 
-  // === ÚJ: Conditional kifejezés támogatás ===
+  // === NEW: Conditional expression support ===
   /**
    * Conditional expression that determines when this validation rule should be applied.
    * Supports the same 3 specification modes as visibleIf:
@@ -165,7 +165,7 @@ export interface LookupConfig {
   displayExpr?: string;
   valueExpr?: string;
   setCellValue?: boolean;
-  dependsOn?: string[]; // Mezők, amelyektől ez a lookup függ
+  dependsOn?: string[]; // Fields that this lookup depends on
 }
 
 export interface BaseFieldConfig {
@@ -179,10 +179,10 @@ export interface BaseFieldConfig {
         showColon?: boolean;
         location?: 'left' | 'right' | 'top';
         alignment?: 'left' | 'right' | 'center';
-        [key: string]: any; // További DevExtreme label opciók
+        [key: string]: any; // Additional DevExtreme label options
       };
 
-  // Állapot
+  // State
   visible?: boolean;
   disabled?: boolean;
   readOnly?: boolean;
@@ -190,11 +190,11 @@ export interface BaseFieldConfig {
   // Layout
   colSpan?: number; // Number of columns the field should span in the form layout
 
-  // Érték
-  value?: any; // Kezdeti/alapértelmezett érték
+  // Value
+  value?: any; // Initial/default value
 
-  // Választó mezők opciók (radiogroup, tagbox, dropdown, selectbox, lookup)
-  // Megjegyzés: Container típusoknál (group, tabbed) ez az 'items' felüldefiniálódik FieldConfig[]-re
+  // Selector field options (radiogroup, tagbox, dropdown, selectbox, lookup)
+  // Note: For container types (group, tabbed) 'items' is overridden to FieldConfig[]
   options?: Array<string | { value: any; text?: string; [key: string]: any }>;
   valueExpr?: string; // Default: 'value'
   displayExpr?: string; // Default: 'text'
@@ -218,11 +218,11 @@ export interface BaseFieldConfig {
   validationMessageMode?: 'always' | 'auto'; // When to display validation messages
   validationMessagePosition?: 'bottom' | 'top' | 'left' | 'right'; // Where to display validation messages
 
-  // Útvonal alapú hivatkozások
+  // Path-based references
   dependentFields?: string[];
   references?: string[];
 
-  // UI testreszabás
+  // UI customization
   cssClass?: string;
   helpText?: string;
   stylingMode?: 'outlined' | 'underlined' | 'filled'; // Visual styling mode
@@ -236,16 +236,16 @@ export interface BaseFieldConfig {
   // Lookup
   lookup?: LookupConfig;
 
-  // Speciális konfigurációk
-  editMode?: 'form' | 'cell' | 'row' | 'batch' | 'popup'; // Grid és Tree szerkesztési mód
+  // Special configurations
+  editMode?: 'form' | 'cell' | 'row' | 'batch' | 'popup'; // Grid and Tree editing mode
 
-  // Grid/Tree oszlop specifikus tulajdonságok
-  allowEditing?: boolean; // Szerkeszthető-e az oszlop grid/tree kontextusban
-  allowSorting?: boolean; // Rendezhető-e az oszlop
-  allowFiltering?: boolean; // Szűrhető-e az oszlop
+  // Grid/Tree column specific properties
+  allowEditing?: boolean; // Whether the column is editable in grid/tree context
+  allowSorting?: boolean; // Whether the column is sortable
+  allowFiltering?: boolean; // Whether the column is filterable
 
-  // DevExtreme általános editor opciók
-  // Bármilyen típus-specifikus beállítás, amit a DevExtreme editor támogat
+  // DevExtreme general editor options
+  // Any type-specific settings supported by the DevExtreme editor
   editorOptions?: Record<string, any>;
 }
 
@@ -496,7 +496,7 @@ export interface ItemConfig {
   label?: string; // Display label (legacy, prefer title)
   description?: string;
   type?: 'grid' | 'tree' | 'form'; // Optional - backend provides from top-level type
-  configId?: string; // Slug-objectId formátum vagy ObjectId
+  configId?: string; // Slug-objectId format or ObjectId
   slug?: string; // URL-friendly slug
   name?: string;
   items: FieldConfig[]; // ← Changed from columns to items
@@ -522,9 +522,9 @@ export interface ItemConfig {
     mode?: 'batch' | 'cell' | 'row' | 'form' | 'popup';
   };
   export?: {
-    enabled?: boolean; // Export engedélyezve
-    fileName?: string; // Default fájlnév
-    formats?: ('xlsx' | 'pdf')[]; // Formátumok
+    enabled?: boolean; // Export enabled
+    fileName?: string; // Default file name
+    formats?: ('xlsx' | 'pdf')[]; // Formats
   };
   height?: string | number;
   minHeight?: string | number;
@@ -536,14 +536,14 @@ export interface ItemConfig {
   keyExpr?: string; // For tree
   parentIdExpr?: string; // For tree
 
-  // DevExtreme Tree/Grid-specifikus megjelenítési opciók
-  autoExpandAll?: boolean; // Automatikus kibontás minden tree node-nál
-  showRowLines?: boolean; // Sorok közötti vonalak megjelenítése
-  showBorders?: boolean; // Szegélyek megjelenítése a grid/tree körül
-  columnAutoWidth?: boolean; // Oszlopok automatikus szélessége
-  allowColumnReordering?: boolean; // Oszlopok átrendezésének engedélyezése
-  allowColumnResizing?: boolean; // Oszlopok átméretezésének engedélyezése
-  showColumnHeaders?: boolean; // Oszlop fejlécek megjelenítése
+  // DevExtreme Tree/Grid-specific display options
+  autoExpandAll?: boolean; // Auto-expand all tree nodes
+  showRowLines?: boolean; // Show lines between rows
+  showBorders?: boolean; // Show borders around the grid/tree
+  columnAutoWidth?: boolean; // Auto-width for columns
+  allowColumnReordering?: boolean; // Allow column reordering
+  allowColumnResizing?: boolean; // Allow column resizing
+  showColumnHeaders?: boolean; // Show column headers
 }
 
 // Root-level form configuration object
