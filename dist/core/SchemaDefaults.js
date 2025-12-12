@@ -90,7 +90,7 @@ SchemaDefaults.ItemConfig = {
  * Default values for GroupFieldConfig
  */
 SchemaDefaults.GroupFieldConfig = {
-    colCount: 1, // DevExtreme alapértelmezett
+    colCount: 1, // DevExtreme default
     excludeFromPath: false,
 };
 /**
