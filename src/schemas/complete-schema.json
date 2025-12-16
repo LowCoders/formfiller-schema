@@ -3563,7 +3563,39 @@
                 "oneOf": [
                   {
                     "type": "string",
-                    "description": "Predefined toolbar item name (e.g., 'bold', 'italic', 'header', 'separator')"
+                    "description": "Predefined toolbar item name",
+                    "enum": [
+                      "undo",
+                      "redo",
+                      "separator",
+                      "bold",
+                      "italic",
+                      "strike",
+                      "underline",
+                      "alignLeft",
+                      "alignCenter",
+                      "alignRight",
+                      "alignJustify",
+                      "orderedList",
+                      "bulletList",
+                      "header",
+                      "blockquote",
+                      "codeBlock",
+                      "color",
+                      "background",
+                      "link",
+                      "image",
+                      "variable",
+                      "insertTable",
+                      "deleteTable",
+                      "insertRowAbove",
+                      "insertRowBelow",
+                      "deleteRow",
+                      "insertColumnLeft",
+                      "insertColumnRight",
+                      "deleteColumn",
+                      "clear"
+                    ]
                   },
                   {
                     "type": "object",
@@ -3572,7 +3604,39 @@
                     "properties": {
                       "name": {
                         "type": "string",
-                        "description": "Predefined item name: bold, italic, strike, underline, alignLeft, alignCenter, alignRight, alignJustify, orderedList, bulletList, header, blockquote, codeBlock, color, background, link, image, variable, insertTable, deleteTable, insertRowAbove, insertRowBelow, deleteRow, insertColumnLeft, insertColumnRight, deleteColumn, undo, redo, clear, separator"
+                        "description": "Predefined toolbar item name",
+                        "enum": [
+                          "undo",
+                          "redo",
+                          "separator",
+                          "bold",
+                          "italic",
+                          "strike",
+                          "underline",
+                          "alignLeft",
+                          "alignCenter",
+                          "alignRight",
+                          "alignJustify",
+                          "orderedList",
+                          "bulletList",
+                          "header",
+                          "blockquote",
+                          "codeBlock",
+                          "color",
+                          "background",
+                          "link",
+                          "image",
+                          "variable",
+                          "insertTable",
+                          "deleteTable",
+                          "insertRowAbove",
+                          "insertRowBelow",
+                          "deleteRow",
+                          "insertColumnLeft",
+                          "insertColumnRight",
+                          "deleteColumn",
+                          "clear"
+                        ]
                       },
                       "acceptedValues": {
                         "type": "array",
