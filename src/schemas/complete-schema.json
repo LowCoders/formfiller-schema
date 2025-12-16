@@ -3558,9 +3558,75 @@
           "properties": {
             "items": {
               "type": "array",
+              "description": "Toolbar items - can be predefined item names (strings) or custom item configurations (objects)",
               "items": {
-                "type": "string"
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "description": "Predefined toolbar item name (e.g., 'bold', 'italic', 'header', 'separator')"
+                  },
+                  {
+                    "type": "object",
+                    "description": "Custom toolbar item configuration",
+                    "additionalProperties": false,
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "Predefined item name: bold, italic, strike, underline, alignLeft, alignCenter, alignRight, alignJustify, orderedList, bulletList, header, blockquote, codeBlock, color, background, link, image, variable, insertTable, deleteTable, insertRowAbove, insertRowBelow, deleteRow, insertColumnLeft, insertColumnRight, deleteColumn, undo, redo, clear, separator"
+                      },
+                      "acceptedValues": {
+                        "type": "array",
+                        "description": "Accepted values for the item (e.g., [1, 2, 3, false] for header levels)",
+                        "items": {
+                          "oneOf": [
+                            { "type": "string" },
+                            { "type": "number" },
+                            { "type": "boolean" }
+                          ]
+                        }
+                      },
+                      "options": {
+                        "type": "object",
+                        "description": "Widget-specific configuration options"
+                      },
+                      "showText": {
+                        "type": "string",
+                        "enum": ["always", "inMenu"],
+                        "description": "When to display text for the toolbar item"
+                      },
+                      "text": {
+                        "type": "string",
+                        "description": "Text displayed for the toolbar item"
+                      },
+                      "visible": {
+                        "type": "boolean",
+                        "description": "Whether the toolbar item is visible"
+                      },
+                      "widget": {
+                        "type": "string",
+                        "description": "Widget type to represent the item (e.g., 'dxButton', 'dxSelectBox')"
+                      },
+                      "location": {
+                        "type": "string",
+                        "enum": ["before", "after", "center"],
+                        "description": "Location of the item in the toolbar"
+                      },
+                      "formatName": {
+                        "type": "string",
+                        "description": "Custom format name"
+                      },
+                      "formatValues": {
+                        "type": "array",
+                        "description": "Custom format values"
+                      }
+                    }
+                  }
+                ]
               }
+            },
+            "multiline": {
+              "type": "boolean",
+              "description": "Whether the toolbar can span multiple lines"
             }
           }
         },
@@ -3573,6 +3639,15 @@
               "type": "boolean"
             }
           }
+        },
+        "valueType": {
+          "type": "string",
+          "enum": ["html", "markdown"],
+          "description": "Output value format type"
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Placeholder text when editor is empty"
         },
         "value": {
           "type": "string",

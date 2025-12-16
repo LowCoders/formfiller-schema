@@ -2,7 +2,7 @@
  * FormFiller Schema - Monaco Editor Type Definitions Bundle
  * 
  * Auto-generated type definitions for Monaco Editor IntelliSense
- * Generated: 2025-12-12T07:47:05.495Z
+ * Generated: 2025-12-16T14:56:37.473Z
  */
 
 declare module 'formfiller-schema' {
@@ -293,10 +293,59 @@ declare interface TextAreaFieldConfig extends BaseFieldConfig {
     maxLength?: number;
     autoResizeEnabled?: boolean;
 }
+/**
+ * HtmlEditor toolbar item configuration
+ * Can be either a string (predefined item name) or an object with custom configuration
+ */
+declare interface HtmlEditorToolbarItem {
+    /** Predefined item name: bold, italic, strike, underline, alignLeft, alignCenter, alignRight,
+     * alignJustify, orderedList, bulletList, header, blockquote, codeBlock, color, background,
+     * link, image, variable, insertTable, deleteTable, insertRowAbove, insertRowBelow, deleteRow,
+     * insertColumnLeft, insertColumnRight, deleteColumn, undo, redo, clear, separator */
+    name?: string;
+    /** Accepted values for the item (e.g., [1, 2, 3, false] for header levels) */
+    acceptedValues?: (string | number | boolean)[];
+    /** Widget-specific configuration options */
+    options?: Record<string, any>;
+    /** When to display text for the toolbar item */
+    showText?: 'always' | 'inMenu';
+    /** Text displayed for the toolbar item */
+    text?: string;
+    /** Whether the toolbar item is visible */
+    visible?: boolean;
+    /** Widget type to represent the item (e.g., 'dxButton', 'dxSelectBox') */
+    widget?: string;
+    /** Location of the item in the toolbar */
+    location?: 'before' | 'after' | 'center';
+    /** Custom format name */
+    formatName?: string;
+    /** Custom format values */
+    formatValues?: any[];
+}
+/**
+ * HtmlEditor toolbar configuration
+ */
+declare interface HtmlEditorToolbarConfig {
+    /** Toolbar items - can be predefined item names (strings) or custom item configurations */
+    items?: (string | HtmlEditorToolbarItem)[];
+    /** Whether the toolbar can span multiple lines */
+    multiline?: boolean;
+}
+/**
+ * HtmlEditor media resizing configuration
+ */
+declare interface HtmlEditorMediaResizingConfig {
+    /** Whether media resizing is enabled */
+    enabled?: boolean;
+}
 declare interface HtmlEditorFieldConfig extends BaseFieldConfig {
     type: 'htmleditor';
-    toolbar?: any;
-    mediaResizing?: any;
+    /** Toolbar configuration */
+    toolbar?: HtmlEditorToolbarConfig;
+    /** Media resizing configuration */
+    mediaResizing?: HtmlEditorMediaResizingConfig;
+    /** Output value format type */
+    valueType?: 'html' | 'markdown';
 }
 declare interface ColorBoxFieldConfig extends BaseFieldConfig {
     type: 'colorbox';
