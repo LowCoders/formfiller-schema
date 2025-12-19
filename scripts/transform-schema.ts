@@ -37,6 +37,114 @@ interface FieldConfigDefinition {
 // Field config definitions to keep as separate definitions (used by other definitions)
 const KEEP_SEPARATE_DEFINITIONS = ['TabFieldConfig', 'StepFieldConfig'];
 
+// Path to TypeScript interfaces
+const interfacesPath = path.join(__dirname, '../src/interfaces/index.ts');
+
+/**
+ * Extract ValidationRule type values from TypeScript interface
+ * Parses the interface file to get the union type values
+ */
+function extractValidationRuleTypes(): string[] {
+  const content = fs.readFileSync(interfacesPath, 'utf-8');
+  
+  // Find the ValidationRule interface and extract the type union
+  // Match: interface ValidationRule { type: ... ; (until the semicolon)
+  const typeMatch = content.match(/interface ValidationRule\s*\{[\s\S]*?type:\s*([\s\S]*?);/);
+  if (!typeMatch) {
+    console.warn('⚠️ Could not find ValidationRule.type in TypeScript interface');
+    return [];
+  }
+  
+  // Extract all string literals from the type union
+  const typeUnion = typeMatch[1];
+  const types = typeUnion.match(/'([^']+)'/g)?.map(t => t.replace(/'/g, '')) || [];
+  
+  return types;
+}
+
+/**
+ * ErrorTarget property definition for ValidationRule
+ */
+const errorTargetProperty = {
+  oneOf: [
+    { enum: ['currentField', 'allTargetFields'] },
+    { type: 'array', items: { type: 'string' } }
+  ],
+  description: 'Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths'
+};
+
+/**
+ * Update ValidationRule schema with types from TypeScript and add errorTarget
+ */
+function updateValidationRuleSchema(schema: any, tsTypes: string[]): void {
+  const validationRule = schema.definitions?.ValidationRule;
+  if (!validationRule?.oneOf) {
+    console.warn('⚠️ ValidationRule.oneOf not found in schema');
+    return;
+  }
+
+  // Get existing types from schema
+  const existingTypes = new Set<string>();
+  for (const item of validationRule.oneOf) {
+    const typeEnum = item.properties?.type?.enum;
+    if (typeEnum && typeEnum.length > 0) {
+      typeEnum.forEach((t: string) => existingTypes.add(t));
+    }
+  }
+
+  // Find new crossField* types that need to be added
+  const newCrossFieldTypes = tsTypes.filter(t => 
+    t.startsWith('crossField') && 
+    t !== 'crossField' && 
+    !existingTypes.has(t)
+  );
+
+  console.log(`🔍 Existing validation types in schema: ${existingTypes.size}`);
+  console.log(`🔍 TypeScript validation types: ${tsTypes.length}`);
+  console.log(`➕ New crossField types to add: ${newCrossFieldTypes.length}`);
+
+  // 1. Add errorTarget to all existing validation rules
+  for (const item of validationRule.oneOf) {
+    if (item.properties && !item.properties.errorTarget) {
+      item.properties.errorTarget = errorTargetProperty;
+    }
+  }
+  console.log(`✅ Added errorTarget to existing validation rules`);
+
+  // 2. Add new crossField* types
+  for (const cfType of newCrossFieldTypes) {
+    const newRule = {
+      type: 'object',
+      description: `CrossField validation: ${cfType.replace('crossField', '')}`,
+      additionalProperties: false,
+      properties: {
+        type: { enum: [cfType] },
+        targetFields: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Array of field names to validate together'
+        },
+        message: {
+          type: 'string',
+          description: 'Custom error message to display when validation fails'
+        },
+        errorTarget: errorTargetProperty,
+        when: {
+          $ref: '#/definitions/ConditionalExpression',
+          description: 'Conditional expression that determines when this validation rule should be applied'
+        }
+      },
+      required: ['type', 'targetFields']
+    };
+    validationRule.oneOf.push(newRule);
+    console.log(`  ➕ Added ${cfType}`);
+  }
+
+  if (newCrossFieldTypes.length > 0) {
+    console.log(`✅ Added ${newCrossFieldTypes.length} new crossField validation types`);
+  }
+}
+
 // Common properties that exist in BaseFieldConfig
 const BASE_FIELD_PROPERTIES = [
   'name', 'label', 'visible', 'disabled', 'width', 'height', 
@@ -111,6 +219,13 @@ function transformSchema(): void {
   // Read source schema
   const srcSchema = JSON.parse(fs.readFileSync(srcSchemaPath, 'utf-8'));
   const definitions = srcSchema.definitions;
+
+  // === Step 1: Sync ValidationRule types from TypeScript ===
+  const validationTypes = extractValidationRuleTypes();
+  if (validationTypes.length > 0) {
+    console.log(`📝 Found ${validationTypes.length} validation types in TypeScript interface`);
+    updateValidationRuleSchema(srcSchema, validationTypes);
+  }
   
   // Find all *FieldConfig definitions
   const fieldConfigDefs: Map<string, FieldConfigDefinition> = new Map();

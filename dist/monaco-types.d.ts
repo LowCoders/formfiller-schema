@@ -2,7 +2,7 @@
  * FormFiller Schema - Monaco Editor Type Definitions Bundle
  * 
  * Auto-generated type definitions for Monaco Editor IntelliSense
- * Generated: 2025-12-16T16:19:55.544Z
+ * Generated: 2025-12-19T15:22:08.575Z
  */
 
 declare module 'formfiller-schema' {
@@ -22,8 +22,19 @@ declare type ConditionalExpression = {
  */
 declare type ValidationCondition = ConditionalExpression;
 declare interface ValidationRule {
-    type: 'required' | 'stringLength' | 'arrayLength' | 'range' | 'pattern' | 'email' | 'numeric' | 'compare' | 'custom' | 'async' | 'crossField' | 'computed' | 'temporal' | 'plugin' | 'arrayLength';
+    type: 'required' | 'stringLength' | 'arrayLength' | 'range' | 'pattern' | 'email' | 'numeric' | 'compare' | 'custom' | 'async' | 'crossField' | 'computed' | 'temporal' | 'plugin' | 'crossFieldEquals' | 'crossFieldNotEquals' | 'crossFieldGreaterThan' | 'crossFieldLessThan' | 'crossFieldSumEquals' | 'crossFieldPercentageSum' | 'crossFieldDateInRange' | 'crossFieldAtLeastOne' | 'crossFieldCustom';
     message?: string;
+    /**
+     * Determines where validation errors should be displayed
+     * - 'currentField': only at the current field (default for field-level rules)
+     * - 'allTargetFields': at all involved fields (default for form-level rules)
+     * - string[]: specific field paths where the error should appear
+     *
+     * If not specified:
+     * - field-level rule → 'currentField'
+     * - form-level rule → 'allTargetFields'
+     */
+    errorTarget?: 'currentField' | 'allTargetFields' | string[];
     /**
      * Conditional expression that determines when this validation rule should be applied.
      * Supports the same 3 specification modes as visibleIf:
@@ -378,6 +389,11 @@ declare interface FormPreferences {
     saveUrl?: string;
     computedRuleResults?: 'none' | 'score' | 'detailed';
     storeComputedResults?: boolean;
+    /**
+     * Show validation errors in a summary accordion at the top of the form
+     * @default true
+     */
+    showErrorsOnFormLevel?: boolean;
 }
 declare interface ItemConfig {
     id?: string;

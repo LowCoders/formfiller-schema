@@ -1,6 +1,6 @@
 {
   "name": "formfiller-schema",
-  "version": "5.1.10",
+  "version": "5.2.0",
   "description": "Shared schema definitions for FormFiller application with unified expression system, consolidated lookup.dataSource, and Stepper component support",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,13 +20,9 @@
     "lint:fix": "eslint src --ext .ts --fix",
     "csfixer": "prettier --write src && eslint src --ext .ts --fix",
     "csfixer:check": "prettier --check src && eslint src --ext .ts",
-    "sync": "./sync-dependents.sh",
-    "sync:auto": "AUTO_RESTART=true ./sync-dependents.sh",
-    "sync:dry": "DRY_RUN=true ./sync-dependents.sh",
-    "update-dependents": "./update-dependents.sh",
-    "distribute": "./update-dependents.sh",
-    "distribute:auto": "AUTO_RESTART=true ./update-dependents.sh",
-    "distribute:dry": "DRY_RUN=true ./update-dependents.sh"
+    "release": "./scripts/release.sh",
+    "release:minor": "./scripts/release.sh minor",
+    "release:major": "./scripts/release.sh major"
   },
   "files": [
     "dist"

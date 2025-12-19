@@ -25,13 +25,34 @@ export interface ValidationRule {
     | 'custom'
     // Extended types
     | 'async' // External API validation
-    | 'crossField' // Multiple field comparison
+    | 'crossField' // Multiple field comparison (legacy, prefer crossField* types)
     | 'computed' // Calculation without validation (scoring, aggregation)
     | 'temporal' // Time-dependent validation
     | 'plugin' // Pluggable validation
-    | 'arrayLength'; // Array size validation (min/max element count)
+    // CrossField validator types (new format - type contains the validator name)
+    | 'crossFieldEquals' // Fields must be equal
+    | 'crossFieldNotEquals' // Fields must not be equal
+    | 'crossFieldGreaterThan' // First field > second field
+    | 'crossFieldLessThan' // First field < second field
+    | 'crossFieldSumEquals' // Sum of fields equals target
+    | 'crossFieldPercentageSum' // Fields sum to 100%
+    | 'crossFieldDateInRange' // Date within range of other dates
+    | 'crossFieldAtLeastOne' // At least one field has value
+    | 'crossFieldCustom'; // Custom crossField validator
 
   message?: string;
+
+  /**
+   * Determines where validation errors should be displayed
+   * - 'currentField': only at the current field (default for field-level rules)
+   * - 'allTargetFields': at all involved fields (default for form-level rules)
+   * - string[]: specific field paths where the error should appear
+   *
+   * If not specified:
+   * - field-level rule → 'currentField'
+   * - form-level rule → 'allTargetFields'
+   */
+  errorTarget?: 'currentField' | 'allTargetFields' | string[];
 
   // === NEW: Conditional expression support ===
   /**
@@ -538,6 +559,12 @@ export interface FormPreferences {
   saveUrl?: string; // Optional custom save endpoint URL
   computedRuleResults?: 'none' | 'score' | 'detailed'; // How to display computed validation results
   storeComputedResults?: boolean; // Whether to store computed results in form data
+
+  /**
+   * Show validation errors in a summary accordion at the top of the form
+   * @default true
+   */
+  showErrorsOnFormLevel?: boolean;
 }
 
 // Forward declaration for recursive types
