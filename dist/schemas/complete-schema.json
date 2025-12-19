@@ -5,1353 +5,592 @@
   "definitions": {
     "ValidationRule": {
       "type": "object",
-      "description": "Validation rule definitions for form fields",
-      "oneOf": [
-        {
-          "type": "object",
-          "description": "Makes the field required",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "required"
-              ]
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            }
-          },
-          "required": [
-            "type"
-          ]
-        },
-        {
-          "type": "object",
-          "description": "Validates string length with min/max constraints",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "stringLength"
-              ]
-            },
-            "min": {
-              "type": "number",
-              "description": "Minimum string length"
-            },
-            "max": {
-              "type": "number",
-              "description": "Maximum string length"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            }
-          },
-          "required": [
-            "type"
+      "description": "Validation rule definitions for form fields. The available properties depend on the validation type.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "arrayLength",
+            "async",
+            "compare",
+            "computed",
+            "crossFieldAtLeastOne",
+            "crossFieldCustom",
+            "crossFieldDateInRange",
+            "crossFieldEquals",
+            "crossFieldGreaterThan",
+            "crossFieldLessThan",
+            "crossFieldNotEquals",
+            "crossFieldPercentageSum",
+            "crossFieldSumEquals",
+            "custom",
+            "email",
+            "numeric",
+            "pattern",
+            "plugin",
+            "range",
+            "required",
+            "stringLength",
+            "temporal"
           ],
-          "anyOf": [
-            {
-              "required": [
-                "min"
-              ]
-            },
-            {
-              "required": [
-                "max"
-              ]
-            }
-          ]
+          "description": "The type of validation to apply"
         },
-        {
-          "type": "object",
-          "description": "Validates numeric values within a min/max range",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "range"
-              ]
-            },
-            "min": {
-              "type": "number",
-              "description": "Minimum allowed value"
-            },
-            "max": {
-              "type": "number",
-              "description": "Maximum allowed value"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            }
-          },
-          "required": [
-            "type"
-          ],
-          "anyOf": [
+        "message": {
+          "type": "string",
+          "description": "Custom error message to display when validation fails"
+        },
+        "when": {
+          "$ref": "#/definitions/ConditionalExpression",
+          "description": "Conditional expression that determines when this validation rule should be applied"
+        },
+        "errorTarget": {
+          "oneOf": [
             {
-              "required": [
-                "min"
+              "enum": [
+                "currentField",
+                "allTargetFields"
               ]
             },
             {
-              "required": [
-                "max"
-              ]
-            }
-          ]
-        },
-        {
-          "type": "object",
-          "description": "Validates against a regular expression pattern",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "pattern"
-              ]
-            },
-            "pattern": {
-              "type": "string",
-              "description": "Regular expression pattern for validation"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            }
-          },
-          "required": [
-            "type",
-            "pattern"
-          ]
-        },
-        {
-          "type": "object",
-          "description": "Validates email address format",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "email"
-              ]
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            }
-          },
-          "required": [
-            "type"
-          ]
-        },
-        {
-          "type": "object",
-          "description": "Ensures the value is numeric",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "numeric"
-              ]
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            }
-          },
-          "required": [
-            "type"
-          ]
-        },
-        {
-          "type": "object",
-          "description": "Compares field value with another field or value",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "compare"
-              ]
-            },
-            "comparisonTarget": {
-              "type": "string",
-              "description": "Field name or value to compare against"
-            },
-            "comparisonType": {
-              "enum": [
-                "==",
-                "!=",
-                "<",
-                ">",
-                "<=",
-                ">="
-              ],
-              "description": "Comparison operator (==, !=, <, >, <=, >=)"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            }
-          },
-          "required": [
-            "type"
-          ]
-        },
-        {
-          "type": "object",
-          "description": "Custom validation using a callback function",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "custom"
-              ]
-            },
-            "validationCallback": {
-              "type": "string",
-              "description": "Name of the custom validation function"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            }
-          },
-          "required": [
-            "type",
-            "validationCallback"
-          ]
-        },
-        {
-          "type": "object",
-          "description": "External API validation - validates against a remote API endpoint",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "async"
-              ]
-            },
-            "apiEndpoint": {
-              "type": "string",
-              "description": "API endpoint URL for validation"
-            },
-            "apiMethod": {
-              "enum": [
-                "GET",
-                "POST"
-              ],
-              "description": "HTTP method for the API call (default: POST)"
-            },
-            "apiPayload": {
-              "type": "object",
-              "description": "Additional payload data to send with the API request"
-            },
-            "apiTimeout": {
-              "type": "number",
-              "description": "Timeout in milliseconds (default: 5000)"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            }
-          },
-          "required": [
-            "type",
-            "apiEndpoint"
-          ]
-        },
-        {
-          "type": "object",
-          "description": "Cross-field validation - validates multiple fields together",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "crossField"
-              ]
-            },
-            "targetFields": {
               "type": "array",
               "items": {
                 "type": "string"
-              },
-              "description": "Array of field names to validate together"
+              }
+            }
+          ],
+          "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "stringLength"
+              }
             },
-            "crossFieldValidator": {
-              "oneOf": [
-                {
-                  "type": "string",
-                  "description": "Name of the cross-field validation function"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "name": {
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "min": {
+                "type": "number",
+                "description": "Minimum string length"
+              },
+              "max": {
+                "type": "number",
+                "description": "Maximum string length"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "range"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "min": {
+                "type": "number",
+                "description": "Minimum allowed value"
+              },
+              "max": {
+                "type": "number",
+                "description": "Maximum allowed value"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "pattern"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "Regular expression pattern for validation"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "compare"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "comparisonTarget": {
+                "type": "string",
+                "description": "Field name or value to compare against"
+              },
+              "comparisonType": {
+                "enum": [
+                  "==",
+                  "!=",
+                  "<",
+                  ">",
+                  "<=",
+                  ">="
+                ],
+                "description": "Comparison operator (==, !=, <, >, <=, >=)"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "custom"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "validationCallback": {
+                "type": "string",
+                "description": "Name of the custom validation function"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "async"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "apiEndpoint": {
+                "type": "string",
+                "description": "API endpoint URL for validation"
+              },
+              "apiMethod": {
+                "enum": [
+                  "GET",
+                  "POST"
+                ],
+                "description": "HTTP method for the API call (default: POST)"
+              },
+              "apiPayload": {
+                "type": "object",
+                "description": "Additional payload data to send with the API request"
+              },
+              "apiTimeout": {
+                "type": "number",
+                "description": "Timeout in milliseconds (default: 5000)"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "computed"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "subtype": {
+                "enum": [
+                  "exactMatch",
+                  "arrayMatch",
+                  "numericMatch",
+                  "keywordMatch",
+                  "aggregate",
+                  "custom"
+                ],
+                "description": "Type of computed rule"
+              },
+              "correctAnswer": {
+                "description": "The correct answer for comparison"
+              },
+              "points": {
+                "type": "number",
+                "description": "Points awarded for correct answer"
+              },
+              "penalty": {
+                "type": "number",
+                "description": "Points deducted for incorrect answer"
+              },
+              "partialCredit": {
+                "type": "boolean",
+                "description": "Whether to award partial credit"
+              },
+              "keywords": {
+                "type": "object",
+                "properties": {
+                  "required": {
+                    "type": "array",
+                    "items": {
                       "type": "string"
-                    },
-                    "params": {
-                      "type": "object"
                     }
                   },
-                  "required": [
-                    "name"
-                  ],
-                  "description": "Cross-field validator with name and parameters"
-                }
-              ],
-              "description": "Cross-field validator (string name or object with name and params)"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            }
-          },
-          "required": [
-            "type",
-            "targetFields",
-            "crossFieldValidator"
-          ]
-        },
-        {
-          "type": "object",
-          "description": "Computed rule - performs calculations without validation (e.g., scoring, summation)",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "computed"
-              ]
-            },
-            "subtype": {
-              "enum": [
-                "exactMatch",
-                "arrayMatch",
-                "numericMatch",
-                "keywordMatch",
-                "aggregate",
-                "custom"
-              ],
-              "description": "Type of computed rule"
-            },
-            "correctAnswer": {
-              "description": "The correct answer for comparison"
-            },
-            "points": {
-              "type": "number",
-              "description": "Points awarded for correct answer"
-            },
-            "penalty": {
-              "type": "number",
-              "description": "Points deducted for incorrect answer"
-            },
-            "partialCredit": {
-              "type": "boolean",
-              "description": "Whether to award partial credit"
-            },
-            "keywords": {
-              "type": "object",
-              "properties": {
-                "required": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
+                  "optional": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   }
                 },
-                "optional": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
+                "description": "Keywords for keywordMatch subtype"
               },
-              "description": "Keywords for keywordMatch subtype"
-            },
-            "minLength": {
-              "type": "number",
-              "description": "Minimum length for keywordMatch"
-            },
-            "tolerance": {
-              "type": "number",
-              "description": "Tolerance for numericMatch"
-            },
-            "compute": {
-              "type": "string",
-              "description": "Name of the computation function"
-            },
-            "returnToFrontend": {
-              "type": "boolean",
-              "description": "Whether to return the computed value to the frontend"
-            },
-            "storeResult": {
-              "type": "boolean",
-              "description": "Whether to store the computed result in the database"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when computation fails"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this rule should be applied"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            }
-          },
-          "required": [
-            "type"
-          ]
-        },
-        {
-          "type": "object",
-          "description": "Temporal validation - time-based validation rules that are active/inactive during specific periods",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "temporal"
-              ]
-            },
-            "validFrom": {
-              "type": "string",
-              "format": "date-time",
-              "description": "Date/time from which the rule is valid (ISO 8601 format)"
-            },
-            "validUntil": {
-              "type": "string",
-              "format": "date-time",
-              "description": "Date/time until which the rule is valid (ISO 8601 format)"
-            },
-            "schedule": {
-              "type": "string",
-              "description": "Cron expression for recurring time periods"
-            },
-            "timezone": {
-              "type": "string",
-              "description": "Timezone for temporal validation (e.g., 'Europe/Budapest')"
-            },
-            "gracePeriod": {
-              "type": "number",
-              "description": "Grace period in milliseconds after validFrom"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            }
-          },
-          "required": [
-            "type"
-          ]
-        },
-        {
-          "type": "object",
-          "description": "Plugin validation - custom plugin-based validation",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "plugin"
-              ]
-            },
-            "pluginName": {
-              "type": "string",
-              "description": "Name of the validation plugin to execute"
-            },
-            "pluginConfig": {
-              "type": "object",
-              "description": "Configuration parameters for the plugin"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            }
-          },
-          "required": [
-            "type",
-            "pluginName"
-          ]
-        },
-        {
-          "type": "object",
-          "description": "Validates array length with min/max constraints",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "arrayLength"
-              ]
-            },
-            "min": {
-              "type": "number",
-              "description": "Minimum array length"
-            },
-            "max": {
-              "type": "number",
-              "description": "Maximum array length"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            }
-          },
-          "required": [
-            "type"
-          ],
-          "anyOf": [
-            {
-              "required": [
-                "min"
-              ]
-            },
-            {
-              "required": [
-                "max"
-              ]
-            }
-          ]
-        },
-        {
-          "type": "object",
-          "description": "Logical AND group - all validation rules must pass",
-          "additionalProperties": false,
-          "properties": {
-            "and": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/ValidationRule"
+              "minLength": {
+                "type": "number",
+                "description": "Minimum length for keywordMatch"
               },
-              "minItems": 1,
-              "description": "Array of validation rules that must ALL pass"
-            },
-            "groupMessage": {
-              "type": "string",
-              "description": "Error message when the AND group validation fails"
-            },
-            "stopOnFirstError": {
-              "type": "boolean",
-              "description": "Stop validation at first failing rule (default: false)"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            }
-          },
-          "required": [
-            "and"
-          ]
-        },
-        {
-          "type": "object",
-          "description": "Logical OR group - at least one validation rule must pass",
-          "additionalProperties": false,
-          "properties": {
-            "or": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/ValidationRule"
+              "tolerance": {
+                "type": "number",
+                "description": "Tolerance for numericMatch"
               },
-              "minItems": 1,
-              "description": "Array of validation rules where AT LEAST ONE must pass"
-            },
-            "groupMessage": {
-              "type": "string",
-              "description": "Error message when the OR group validation fails"
-            },
-            "stopOnFirstError": {
-              "type": "boolean",
-              "description": "Stop validation at first failing rule (default: false)"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            }
-          },
-          "required": [
-            "or"
-          ]
-        },
-        {
-          "type": "object",
-          "description": "Logical NOT group - the validation rule must NOT pass",
-          "additionalProperties": false,
-          "properties": {
-            "not": {
-              "$ref": "#/definitions/ValidationRule",
-              "description": "Validation rule that must NOT pass"
-            },
-            "groupMessage": {
-              "type": "string",
-              "description": "Error message when the NOT group validation fails"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            }
-          },
-          "required": [
-            "not"
-          ]
-        },
-        {
-          "type": "object",
-          "description": "CrossField validation: Equals",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "crossFieldEquals"
-              ]
-            },
-            "targetFields": {
-              "type": "array",
-              "items": {
-                "type": "string"
+              "compute": {
+                "type": "string",
+                "description": "Name of the computation function"
               },
-              "description": "Array of field names to validate together"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
+              "returnToFrontend": {
+                "type": "boolean",
+                "description": "Whether to return the computed value to the frontend"
+              },
+              "storeResult": {
+                "type": "boolean",
+                "description": "Whether to store the computed result in the database"
+              }
             }
-          },
-          "required": [
-            "type",
-            "targetFields"
-          ]
+          }
         },
         {
-          "type": "object",
-          "description": "CrossField validation: NotEquals",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "crossFieldNotEquals"
-              ]
+          "if": {
+            "properties": {
+              "type": {
+                "const": "temporal"
+              }
             },
-            "targetFields": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Array of field names to validate together"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            }
+            "required": [
+              "type"
+            ]
           },
-          "required": [
-            "type",
-            "targetFields"
-          ]
+          "then": {
+            "properties": {
+              "validFrom": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date/time from which the rule is valid (ISO 8601 format)"
+              },
+              "validUntil": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date/time until which the rule is valid (ISO 8601 format)"
+              },
+              "schedule": {
+                "type": "string",
+                "description": "Cron expression for recurring time periods"
+              },
+              "timezone": {
+                "type": "string",
+                "description": "Timezone for temporal validation (e.g., 'Europe/Budapest')"
+              },
+              "gracePeriod": {
+                "type": "number",
+                "description": "Grace period in milliseconds after validFrom"
+              }
+            }
+          }
         },
         {
-          "type": "object",
-          "description": "CrossField validation: GreaterThan",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "crossFieldGreaterThan"
-              ]
+          "if": {
+            "properties": {
+              "type": {
+                "const": "plugin"
+              }
             },
-            "targetFields": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Array of field names to validate together"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            }
+            "required": [
+              "type"
+            ]
           },
-          "required": [
-            "type",
-            "targetFields"
-          ]
+          "then": {
+            "properties": {
+              "pluginName": {
+                "type": "string",
+                "description": "Name of the validation plugin to execute"
+              },
+              "pluginConfig": {
+                "type": "object",
+                "description": "Configuration parameters for the plugin"
+              }
+            }
+          }
         },
         {
-          "type": "object",
-          "description": "CrossField validation: LessThan",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "crossFieldLessThan"
-              ]
+          "if": {
+            "properties": {
+              "type": {
+                "const": "arrayLength"
+              }
             },
-            "targetFields": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Array of field names to validate together"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            }
+            "required": [
+              "type"
+            ]
           },
-          "required": [
-            "type",
-            "targetFields"
-          ]
+          "then": {
+            "properties": {
+              "min": {
+                "type": "number",
+                "description": "Minimum array length"
+              },
+              "max": {
+                "type": "number",
+                "description": "Maximum array length"
+              }
+            }
+          }
         },
         {
-          "type": "object",
-          "description": "CrossField validation: SumEquals",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "crossFieldSumEquals"
-              ]
+          "if": {
+            "properties": {
+              "type": {
+                "const": "crossFieldEquals"
+              }
             },
-            "targetFields": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Array of field names to validate together"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            }
+            "required": [
+              "type"
+            ]
           },
-          "required": [
-            "type",
-            "targetFields"
-          ]
+          "then": {
+            "properties": {
+              "targetFields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Array of field names to validate together"
+              }
+            }
+          }
         },
         {
-          "type": "object",
-          "description": "CrossField validation: PercentageSum",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "crossFieldPercentageSum"
-              ]
+          "if": {
+            "properties": {
+              "type": {
+                "const": "crossFieldNotEquals"
+              }
             },
-            "targetFields": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Array of field names to validate together"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            }
+            "required": [
+              "type"
+            ]
           },
-          "required": [
-            "type",
-            "targetFields"
-          ]
+          "then": {
+            "properties": {
+              "targetFields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Array of field names to validate together"
+              }
+            }
+          }
         },
         {
-          "type": "object",
-          "description": "CrossField validation: DateInRange",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "crossFieldDateInRange"
-              ]
+          "if": {
+            "properties": {
+              "type": {
+                "const": "crossFieldGreaterThan"
+              }
             },
-            "targetFields": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Array of field names to validate together"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            }
+            "required": [
+              "type"
+            ]
           },
-          "required": [
-            "type",
-            "targetFields"
-          ]
+          "then": {
+            "properties": {
+              "targetFields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Array of field names to validate together"
+              }
+            }
+          }
         },
         {
-          "type": "object",
-          "description": "CrossField validation: AtLeastOne",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "crossFieldAtLeastOne"
-              ]
+          "if": {
+            "properties": {
+              "type": {
+                "const": "crossFieldLessThan"
+              }
             },
-            "targetFields": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Array of field names to validate together"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            }
+            "required": [
+              "type"
+            ]
           },
-          "required": [
-            "type",
-            "targetFields"
-          ]
+          "then": {
+            "properties": {
+              "targetFields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Array of field names to validate together"
+              }
+            }
+          }
         },
         {
-          "type": "object",
-          "description": "CrossField validation: Custom",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "crossFieldCustom"
-              ]
+          "if": {
+            "properties": {
+              "type": {
+                "const": "crossFieldSumEquals"
+              }
             },
-            "targetFields": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Array of field names to validate together"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "errorTarget": {
-              "oneOf": [
-                {
-                  "enum": [
-                    "currentField",
-                    "allTargetFields"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ],
-              "description": "Determines where validation errors should be displayed: currentField (default for field rules), allTargetFields (default for form rules), or specific field paths"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            }
+            "required": [
+              "type"
+            ]
           },
-          "required": [
-            "type",
-            "targetFields"
-          ]
+          "then": {
+            "properties": {
+              "targetFields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Array of field names to validate together"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "crossFieldPercentageSum"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "targetFields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Array of field names to validate together"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "crossFieldDateInRange"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "targetFields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Array of field names to validate together"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "crossFieldAtLeastOne"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "targetFields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Array of field names to validate together"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "crossFieldCustom"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "targetFields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Array of field names to validate together"
+              }
+            }
+          }
         }
       ]
     },

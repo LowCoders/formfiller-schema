@@ -25,7 +25,6 @@ export interface ValidationRule {
     | 'custom'
     // Extended types
     | 'async' // External API validation
-    | 'crossField' // Multiple field comparison (legacy, prefer crossField* types)
     | 'computed' // Calculation without validation (scoring, aggregation)
     | 'temporal' // Time-dependent validation
     | 'plugin' // Pluggable validation

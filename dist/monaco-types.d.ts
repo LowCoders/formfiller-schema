@@ -2,7 +2,7 @@
  * FormFiller Schema - Monaco Editor Type Definitions Bundle
  * 
  * Auto-generated type definitions for Monaco Editor IntelliSense
- * Generated: 2025-12-19T15:31:00.789Z
+ * Generated: 2025-12-19T16:15:47.609Z
  */
 
 declare module 'formfiller-schema' {
@@ -22,7 +22,7 @@ declare type ConditionalExpression = {
  */
 declare type ValidationCondition = ConditionalExpression;
 declare interface ValidationRule {
-    type: 'required' | 'stringLength' | 'arrayLength' | 'range' | 'pattern' | 'email' | 'numeric' | 'compare' | 'custom' | 'async' | 'crossField' | 'computed' | 'temporal' | 'plugin' | 'crossFieldEquals' | 'crossFieldNotEquals' | 'crossFieldGreaterThan' | 'crossFieldLessThan' | 'crossFieldSumEquals' | 'crossFieldPercentageSum' | 'crossFieldDateInRange' | 'crossFieldAtLeastOne' | 'crossFieldCustom';
+    type: 'required' | 'stringLength' | 'arrayLength' | 'range' | 'pattern' | 'email' | 'numeric' | 'compare' | 'custom' | 'async' | 'computed' | 'temporal' | 'plugin' | 'crossFieldEquals' | 'crossFieldNotEquals' | 'crossFieldGreaterThan' | 'crossFieldLessThan' | 'crossFieldSumEquals' | 'crossFieldPercentageSum' | 'crossFieldDateInRange' | 'crossFieldAtLeastOne' | 'crossFieldCustom';
     message?: string;
     /**
      * Determines where validation errors should be displayed

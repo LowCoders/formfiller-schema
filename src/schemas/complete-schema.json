@@ -301,60 +301,6 @@
         },
         {
           "type": "object",
-          "description": "Cross-field validation - validates multiple fields together",
-          "additionalProperties": false,
-          "properties": {
-            "type": {
-              "enum": [
-                "crossField"
-              ]
-            },
-            "targetFields": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "description": "Array of field names to validate together"
-            },
-            "crossFieldValidator": {
-              "oneOf": [
-                {
-                  "type": "string",
-                  "description": "Name of the cross-field validation function"
-                },
-                {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "params": {
-                      "type": "object"
-                    }
-                  },
-                  "required": ["name"],
-                  "description": "Cross-field validator with name and parameters"
-                }
-              ],
-              "description": "Cross-field validator (string name or object with name and params)"
-            },
-            "message": {
-              "type": "string",
-              "description": "Custom error message to display when validation fails"
-            },
-            "when": {
-              "$ref": "#/definitions/ConditionalExpression",
-              "description": "Conditional expression that determines when this validation rule should be applied"
-            }
-          },
-          "required": [
-            "type",
-            "targetFields",
-            "crossFieldValidator"
-          ]
-        },
-        {
-          "type": "object",
           "description": "Computed rule - performs calculations without validation (e.g., scoring, summation)",
           "additionalProperties": false,
           "properties": {

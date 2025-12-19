@@ -13,7 +13,7 @@ export type ConditionalExpression = {
  */
 export type ValidationCondition = ConditionalExpression;
 export interface ValidationRule {
-    type: 'required' | 'stringLength' | 'arrayLength' | 'range' | 'pattern' | 'email' | 'numeric' | 'compare' | 'custom' | 'async' | 'crossField' | 'computed' | 'temporal' | 'plugin' | 'crossFieldEquals' | 'crossFieldNotEquals' | 'crossFieldGreaterThan' | 'crossFieldLessThan' | 'crossFieldSumEquals' | 'crossFieldPercentageSum' | 'crossFieldDateInRange' | 'crossFieldAtLeastOne' | 'crossFieldCustom';
+    type: 'required' | 'stringLength' | 'arrayLength' | 'range' | 'pattern' | 'email' | 'numeric' | 'compare' | 'custom' | 'async' | 'computed' | 'temporal' | 'plugin' | 'crossFieldEquals' | 'crossFieldNotEquals' | 'crossFieldGreaterThan' | 'crossFieldLessThan' | 'crossFieldSumEquals' | 'crossFieldPercentageSum' | 'crossFieldDateInRange' | 'crossFieldAtLeastOne' | 'crossFieldCustom';
     message?: string;
     /**
      * Determines where validation errors should be displayed

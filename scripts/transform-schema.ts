@@ -210,6 +210,122 @@ function createIfThenBlock(
   };
 }
 
+// Common properties for all ValidationRule types
+const COMMON_VALIDATION_PROPERTIES = ['type', 'message', 'when', 'errorTarget'];
+
+/**
+ * Transform ValidationRule from oneOf to if/then/else structure for better Monaco autocomplete
+ */
+function transformValidationRule(schema: any, tsTypes: string[]): void {
+  const validationRule = schema.definitions?.ValidationRule;
+  if (!validationRule?.oneOf) {
+    console.warn('⚠️ ValidationRule.oneOf not found, skipping transformation');
+    return;
+  }
+
+  console.log('🔄 Transforming ValidationRule for better autocomplete...');
+
+  // Collect all types and type-specific properties
+  const allTypes: string[] = [];
+  const typeSpecificProps: Map<string, Record<string, any>> = new Map();
+  const commonProps: Record<string, any> = {};
+
+  // First pass: collect common properties and all types
+  for (const item of validationRule.oneOf) {
+    const typeEnum = item.properties?.type?.enum;
+    if (typeEnum && typeEnum.length > 0) {
+      const typeName = typeEnum[0];
+      allTypes.push(typeName);
+
+      // Collect type-specific properties (not common)
+      const specificProps: Record<string, any> = {};
+      for (const [propName, propDef] of Object.entries(item.properties || {})) {
+        if (COMMON_VALIDATION_PROPERTIES.includes(propName)) {
+          // Merge common properties (take the first definition)
+          if (!commonProps[propName]) {
+            commonProps[propName] = propDef;
+          }
+        } else {
+          specificProps[propName] = propDef;
+        }
+      }
+      
+      if (Object.keys(specificProps).length > 0) {
+        typeSpecificProps.set(typeName, specificProps);
+      }
+    }
+  }
+
+  // Add any TypeScript types not in schema
+  for (const tsType of tsTypes) {
+    if (!allTypes.includes(tsType)) {
+      allTypes.push(tsType);
+      // Add default crossField properties for new crossField* types
+      if (tsType.startsWith('crossField')) {
+        typeSpecificProps.set(tsType, {
+          targetFields: {
+            type: 'array',
+            items: { type: 'string' },
+            description: 'Array of field names to validate together'
+          }
+        });
+      }
+    }
+  }
+
+  console.log(`  📝 Collected ${allTypes.length} validation types`);
+  console.log(`  📝 Found ${typeSpecificProps.size} types with specific properties`);
+
+  // Build if/then blocks for type-specific properties
+  const ifThenBlocks: any[] = [];
+  for (const [typeName, props] of typeSpecificProps) {
+    ifThenBlocks.push({
+      if: {
+        properties: {
+          type: { const: typeName }
+        },
+        required: ['type']
+      },
+      then: {
+        properties: props
+      }
+    });
+  }
+
+  // Create the new ValidationRule definition
+  const newValidationRule: any = {
+    type: 'object',
+    description: 'Validation rule definitions for form fields. The available properties depend on the validation type.',
+    properties: {
+      type: {
+        type: 'string',
+        enum: allTypes.sort(),
+        description: 'The type of validation to apply'
+      },
+      message: commonProps.message || {
+        type: 'string',
+        description: 'Custom error message to display when validation fails'
+      },
+      when: commonProps.when || {
+        $ref: '#/definitions/ConditionalExpression',
+        description: 'Conditional expression that determines when this validation rule should be applied'
+      },
+      errorTarget: errorTargetProperty
+    },
+    required: ['type']
+  };
+
+  // Add allOf with if/then blocks for type-specific properties
+  if (ifThenBlocks.length > 0) {
+    newValidationRule.allOf = ifThenBlocks;
+  }
+
+  // Replace the old ValidationRule with the new structure
+  schema.definitions.ValidationRule = newValidationRule;
+
+  console.log(`  ✅ Transformed ValidationRule: ${allTypes.length} types, ${ifThenBlocks.length} if/then blocks`);
+}
+
 /**
  * Transform the schema
  */
@@ -220,11 +336,12 @@ function transformSchema(): void {
   const srcSchema = JSON.parse(fs.readFileSync(srcSchemaPath, 'utf-8'));
   const definitions = srcSchema.definitions;
 
-  // === Step 1: Sync ValidationRule types from TypeScript ===
+  // === Step 1: Sync and Transform ValidationRule ===
   const validationTypes = extractValidationRuleTypes();
   if (validationTypes.length > 0) {
     console.log(`📝 Found ${validationTypes.length} validation types in TypeScript interface`);
-    updateValidationRuleSchema(srcSchema, validationTypes);
+    // Transform ValidationRule from oneOf to if/then/else for better autocomplete
+    transformValidationRule(srcSchema, validationTypes);
   }
   
   // Find all *FieldConfig definitions
