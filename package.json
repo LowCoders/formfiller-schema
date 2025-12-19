@@ -1,6 +1,6 @@
 {
   "name": "formfiller-schema",
-  "version": "5.2.0",
+  "version": "5.2.1",
   "description": "Shared schema definitions for FormFiller application with unified expression system, consolidated lookup.dataSource, and Stepper component support",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -2,7 +2,7 @@
  * FormFiller Schema - Monaco Editor Type Definitions Bundle
  * 
  * Auto-generated type definitions for Monaco Editor IntelliSense
- * Generated: 2025-12-19T15:22:08.575Z
+ * Generated: 2025-12-19T15:31:00.789Z
  */
 
 declare module 'formfiller-schema' {

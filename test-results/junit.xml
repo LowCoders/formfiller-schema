@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="134" failures="0" errors="0" time="2.715">
-  <testsuite name="src/__tests__/core/SchemaVersionManager.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-12-07T11:00:48" time="1.986" tests="8">
-    <testcase classname="SchemaVersionManager › Migration Registration" name="should register a single migration" time="0.006">
-    </testcase>
-    <testcase classname="SchemaVersionManager › Migration Registration" name="should register multiple migrations" time="0.001">
-    </testcase>
-    <testcase classname="SchemaVersionManager › Version Migration" name="should migrate config from v1.0.0 to v2.0.0" time="0.001">
-    </testcase>
-    <testcase classname="SchemaVersionManager › Version Migration" name="should not migrate if versions match" time="0.001">
-    </testcase>
-    <testcase classname="SchemaVersionManager › Version Migration" name="should throw error if no migration path exists" time="0.012">
-    </testcase>
-    <testcase classname="SchemaVersionManager › Migration Chains" name="should execute migration chain" time="0.001">
-    </testcase>
-    <testcase classname="SchemaVersionManager › Version Comparison" name="should check if migration is available" time="0.001">
-    </testcase>
-    <testcase classname="SchemaVersionManager › Version Comparison" name="should check version range" time="0.001">
-    </testcase>
-  </testsuite>
-  <testsuite name="src/__tests__/core/SchemaDefaults.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-12-07T11:00:48" time="2.135" tests="6">
+<testsuites name="jest tests" tests="134" failures="0" errors="0" time="3.135">
+  <testsuite name="src/__tests__/core/SchemaDefaults.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-12-19T15:31:02" time="2.4" tests="6">
     <testcase classname="SchemaDefaults › FormPreferences Defaults" name="should provide complete default preferences" time="0.003">
     </testcase>
     <testcase classname="SchemaDefaults › FormPreferences Defaults" name="should create preferences with overrides" time="0">
@@ -27,163 +9,181 @@
     </testcase>
     <testcase classname="SchemaDefaults › Deep Apply Defaults" name="should handle arrays properly" time="0.001">
     </testcase>
-    <testcase classname="SchemaDefaults › Helper Functions" name="withDeepDefaults should work as shorthand" time="0">
+    <testcase classname="SchemaDefaults › Helper Functions" name="withDeepDefaults should work as shorthand" time="0.001">
     </testcase>
-    <testcase classname="SchemaDefaults › ItemConfig Defaults" name="should provide default editing settings" time="0.001">
+    <testcase classname="SchemaDefaults › ItemConfig Defaults" name="should provide default editing settings" time="0">
     </testcase>
   </testsuite>
-  <testsuite name="src/__tests__/core/DeprecationManager.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-12-07T11:00:48" time="2.108" tests="15">
-    <testcase classname="DeprecationManager › Field Registration" name="should register deprecated field" time="0.003">
+  <testsuite name="src/__tests__/core/DeprecationManager.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-12-19T15:31:02" time="2.514" tests="15">
+    <testcase classname="DeprecationManager › Field Registration" name="should register deprecated field" time="0.005">
     </testcase>
-    <testcase classname="DeprecationManager › Field Registration" name="should register multiple fields" time="0">
+    <testcase classname="DeprecationManager › Field Registration" name="should register multiple fields" time="0.001">
     </testcase>
     <testcase classname="DeprecationManager › Field Registration" name="should get deprecation info" time="0.001">
     </testcase>
-    <testcase classname="DeprecationManager › Check Deprecations" name="should detect deprecated fields" time="0">
+    <testcase classname="DeprecationManager › Check Deprecations" name="should detect deprecated fields" time="0.001">
     </testcase>
     <testcase classname="DeprecationManager › Check Deprecations" name="should not warn for non-deprecated fields" time="0.001">
     </testcase>
     <testcase classname="DeprecationManager › Check Deprecations" name="should detect nested deprecated fields" time="0.001">
     </testcase>
-    <testcase classname="DeprecationManager › Check Deprecations" name="should provide suggestions" time="0">
+    <testcase classname="DeprecationManager › Check Deprecations" name="should provide suggestions" time="0.001">
     </testcase>
     <testcase classname="DeprecationManager › Migration" name="should migrate deprecated fields" time="0.001">
     </testcase>
     <testcase classname="DeprecationManager › Migration" name="should return warnings during migration" time="0.001">
     </testcase>
-    <testcase classname="DeprecationManager › Migration" name="should not mutate original config" time="0">
+    <testcase classname="DeprecationManager › Migration" name="should not mutate original config" time="0.001">
     </testcase>
     <testcase classname="DeprecationManager › Logging" name="should log warnings when enabled" time="0.002">
     </testcase>
     <testcase classname="DeprecationManager › Logging" name="should not log duplicate warnings" time="0">
     </testcase>
-    <testcase classname="DeprecationManager › Logging" name="should reset warnings" time="0.001">
+    <testcase classname="DeprecationManager › Logging" name="should reset warnings" time="0">
     </testcase>
-    <testcase classname="DeprecationManager › Singleton" name="should return same instance" time="0">
+    <testcase classname="DeprecationManager › Singleton" name="should return same instance" time="0.001">
     </testcase>
-    <testcase classname="DeprecationManager › Singleton" name="should have pre-registered deprecations" time="0">
+    <testcase classname="DeprecationManager › Singleton" name="should have pre-registered deprecations" time="0.002">
     </testcase>
   </testsuite>
-  <testsuite name="src/__tests__/core/PerformanceMonitor.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-12-07T11:00:48" time="2.175" tests="20">
+  <testsuite name="src/__tests__/core/PerformanceMonitor.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-12-19T15:31:02" time="2.495" tests="20">
     <testcase classname="PerformanceMonitor › Synchronous Measurement" name="should measure function execution time" time="0.003">
     </testcase>
-    <testcase classname="PerformanceMonitor › Synchronous Measurement" name="should measure multiple operations" time="0.001">
+    <testcase classname="PerformanceMonitor › Synchronous Measurement" name="should measure multiple operations" time="0">
     </testcase>
-    <testcase classname="PerformanceMonitor › Async Measurement" name="should measure async function execution time" time="0.01">
+    <testcase classname="PerformanceMonitor › Async Measurement" name="should measure async function execution time" time="0.011">
     </testcase>
-    <testcase classname="PerformanceMonitor › Manual Measurement" name="should support manual start/stop" time="0.001">
+    <testcase classname="PerformanceMonitor › Manual Measurement" name="should support manual start/stop" time="0">
     </testcase>
-    <testcase classname="PerformanceMonitor › Manual Measurement" name="should support manual recording" time="0">
+    <testcase classname="PerformanceMonitor › Manual Measurement" name="should support manual recording" time="0.001">
     </testcase>
     <testcase classname="PerformanceMonitor › Statistics" name="should calculate average duration" time="0.001">
     </testcase>
     <testcase classname="PerformanceMonitor › Statistics" name="should track min and max" time="0">
     </testcase>
-    <testcase classname="PerformanceMonitor › Statistics" name="should track total duration" time="0">
+    <testcase classname="PerformanceMonitor › Statistics" name="should track total duration" time="0.001">
     </testcase>
     <testcase classname="PerformanceMonitor › Statistics" name="should track last duration" time="0">
     </testcase>
-    <testcase classname="PerformanceMonitor › All Statistics" name="should return all operations sorted by avg duration" time="0.001">
+    <testcase classname="PerformanceMonitor › All Statistics" name="should return all operations sorted by avg duration" time="0">
     </testcase>
-    <testcase classname="PerformanceMonitor › Reporting" name="should generate text report" time="0">
+    <testcase classname="PerformanceMonitor › Reporting" name="should generate text report" time="0.001">
     </testcase>
     <testcase classname="PerformanceMonitor › Reporting" name="should handle empty report" time="0.001">
     </testcase>
     <testcase classname="PerformanceMonitor › Reset" name="should reset specific operation" time="0">
     </testcase>
-    <testcase classname="PerformanceMonitor › Reset" name="should reset all operations" time="0.001">
+    <testcase classname="PerformanceMonitor › Reset" name="should reset all operations" time="0">
     </testcase>
-    <testcase classname="PerformanceMonitor › Enable/Disable" name="should skip measurement when disabled" time="0">
+    <testcase classname="PerformanceMonitor › Enable/Disable" name="should skip measurement when disabled" time="0.001">
     </testcase>
     <testcase classname="PerformanceMonitor › Enable/Disable" name="should resume measurement when enabled" time="0">
     </testcase>
-    <testcase classname="PerformanceMonitor › Percentiles" name="should calculate 50th percentile (median)" time="0.005">
+    <testcase classname="PerformanceMonitor › Percentiles" name="should calculate 50th percentile (median)" time="0.001">
     </testcase>
-    <testcase classname="PerformanceMonitor › Percentiles" name="should calculate 95th percentile" time="0.001">
+    <testcase classname="PerformanceMonitor › Percentiles" name="should calculate 95th percentile" time="0">
     </testcase>
-    <testcase classname="PerformanceMonitor › Percentiles" name="should return null for non-existent operation" time="0">
+    <testcase classname="PerformanceMonitor › Percentiles" name="should return null for non-existent operation" time="0.001">
     </testcase>
     <testcase classname="PerformanceMonitor › Threshold Checking" name="should detect operations exceeding threshold" time="0">
     </testcase>
   </testsuite>
-  <testsuite name="src/__tests__/core/SchemaCache.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-12-07T11:00:48" time="2.288" tests="11">
-    <testcase classname="SchemaCache › Validator Caching" name="should cache validator on first access" time="0.045">
+  <testsuite name="src/__tests__/core/SchemaVersionManager.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-12-19T15:31:02" time="2.524" tests="8">
+    <testcase classname="SchemaVersionManager › Migration Registration" name="should register a single migration" time="0.005">
     </testcase>
-    <testcase classname="SchemaCache › Validator Caching" name="should return cached validator on second access" time="0.016">
+    <testcase classname="SchemaVersionManager › Migration Registration" name="should register multiple migrations" time="0">
+    </testcase>
+    <testcase classname="SchemaVersionManager › Version Migration" name="should migrate config from v1.0.0 to v2.0.0" time="0.001">
+    </testcase>
+    <testcase classname="SchemaVersionManager › Version Migration" name="should not migrate if versions match" time="0">
+    </testcase>
+    <testcase classname="SchemaVersionManager › Version Migration" name="should throw error if no migration path exists" time="0.009">
+    </testcase>
+    <testcase classname="SchemaVersionManager › Migration Chains" name="should execute migration chain" time="0.001">
+    </testcase>
+    <testcase classname="SchemaVersionManager › Version Comparison" name="should check if migration is available" time="0.001">
+    </testcase>
+    <testcase classname="SchemaVersionManager › Version Comparison" name="should check version range" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="src/__tests__/core/SchemaCache.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-12-19T15:31:02" time="2.55" tests="11">
+    <testcase classname="SchemaCache › Validator Caching" name="should cache validator on first access" time="0.03">
+    </testcase>
+    <testcase classname="SchemaCache › Validator Caching" name="should return cached validator on second access" time="0.013">
     </testcase>
     <testcase classname="SchemaCache › Validator Caching" name="should track cache hits and misses" time="0.013">
     </testcase>
-    <testcase classname="SchemaCache › Cache Invalidation" name="should invalidate specific cache entry" time="0.008">
+    <testcase classname="SchemaCache › Cache Invalidation" name="should invalidate specific cache entry" time="0.011">
     </testcase>
-    <testcase classname="SchemaCache › Cache Invalidation" name="should invalidate all cache entries" time="0.007">
+    <testcase classname="SchemaCache › Cache Invalidation" name="should invalidate all cache entries" time="0.008">
     </testcase>
     <testcase classname="SchemaCache › Cache Invalidation" name="should return false for non-existent entry" time="0.001">
     </testcase>
-    <testcase classname="SchemaCache › Cache Statistics" name="should calculate hit rate correctly" time="0.007">
+    <testcase classname="SchemaCache › Cache Statistics" name="should calculate hit rate correctly" time="0.01">
     </testcase>
     <testcase classname="SchemaCache › Cache Statistics" name="should return 0 hit rate with no operations" time="0.001">
     </testcase>
-    <testcase classname="SchemaCache › Cache Statistics" name="should reset statistics" time="0.009">
+    <testcase classname="SchemaCache › Cache Statistics" name="should reset statistics" time="0.01">
     </testcase>
-    <testcase classname="SchemaCache › Automatic Schema ID" name="should generate schema ID automatically" time="0.008">
+    <testcase classname="SchemaCache › Automatic Schema ID" name="should generate schema ID automatically" time="0.007">
     </testcase>
-    <testcase classname="SchemaCache › Automatic Schema ID" name="should use same ID for identical schemas" time="0.007">
+    <testcase classname="SchemaCache › Automatic Schema ID" name="should use same ID for identical schemas" time="0.011">
     </testcase>
   </testsuite>
-  <testsuite name="src/__tests__/core/SchemaValidator.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-12-07T11:00:48" time="2.275" tests="11">
-    <testcase classname="SchemaValidator › Strict Validation" name="should pass valid configuration" time="0.028">
+  <testsuite name="src/__tests__/core/SchemaValidator.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-12-19T15:31:02" time="2.64" tests="11">
+    <testcase classname="SchemaValidator › Strict Validation" name="should pass valid configuration" time="0.034">
     </testcase>
-    <testcase classname="SchemaValidator › Strict Validation" name="should fail missing required fields" time="0.016">
+    <testcase classname="SchemaValidator › Strict Validation" name="should fail missing required fields" time="0.015">
     </testcase>
-    <testcase classname="SchemaValidator › Strict Validation" name="should fail invalid enum value" time="0.013">
+    <testcase classname="SchemaValidator › Strict Validation" name="should fail invalid enum value" time="0.008">
     </testcase>
-    <testcase classname="SchemaValidator › Loose Validation" name="should pass with missing optional fields" time="0.011">
+    <testcase classname="SchemaValidator › Loose Validation" name="should pass with missing optional fields" time="0.009">
     </testcase>
-    <testcase classname="SchemaValidator › Loose Validation" name="should still catch critical type errors" time="0.01">
+    <testcase classname="SchemaValidator › Loose Validation" name="should still catch critical type errors" time="0.011">
     </testcase>
     <testcase classname="SchemaValidator › Development Validation" name="should pass almost anything" time="0.001">
     </testcase>
-    <testcase classname="SchemaValidator › Development Validation" name="should fail if not an object" time="0">
+    <testcase classname="SchemaValidator › Development Validation" name="should fail if not an object" time="0.001">
     </testcase>
-    <testcase classname="SchemaValidator › Development Validation" name="should warn about missing recommended fields" time="0.001">
+    <testcase classname="SchemaValidator › Development Validation" name="should warn about missing recommended fields" time="0">
     </testcase>
-    <testcase classname="SchemaValidator › Custom Rules" name="should apply custom validation rules" time="0.008">
+    <testcase classname="SchemaValidator › Custom Rules" name="should apply custom validation rules" time="0.007">
     </testcase>
-    <testcase classname="SchemaValidator › Cache Management" name="should cache compiled validators" time="0.008">
+    <testcase classname="SchemaValidator › Cache Management" name="should cache compiled validators" time="0.007">
     </testcase>
     <testcase classname="SchemaValidator › Cache Management" name="should clear cache" time="0.009">
     </testcase>
   </testsuite>
-  <testsuite name="src/__tests__/schema-validation.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-12-07T11:00:48" time="2.374" tests="46">
-    <testcase classname="Schema Validation Tests › Field Validation" name="should validate simple text field" time="0.006">
+  <testsuite name="src/__tests__/schema-validation.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-12-19T15:31:02" time="2.701" tests="46">
+    <testcase classname="Schema Validation Tests › Field Validation" name="should validate simple text field" time="0.008">
     </testcase>
     <testcase classname="Schema Validation Tests › Field Validation" name="should validate number field with editor options" time="0.001">
     </testcase>
     <testcase classname="Schema Validation Tests › Field Validation" name="should validate date field" time="0">
     </testcase>
-    <testcase classname="Schema Validation Tests › Field Validation" name="should validate dropdown field with lookup" time="0">
+    <testcase classname="Schema Validation Tests › Field Validation" name="should validate dropdown field with lookup" time="0.001">
     </testcase>
-    <testcase classname="Schema Validation Tests › Field Validation" name="should validate boolean field" time="0.001">
+    <testcase classname="Schema Validation Tests › Field Validation" name="should validate boolean field" time="0">
     </testcase>
-    <testcase classname="Schema Validation Tests › Field Validation" name="should validate switch field" time="0">
+    <testcase classname="Schema Validation Tests › Field Validation" name="should validate switch field" time="0.001">
     </testcase>
     <testcase classname="Schema Validation Tests › Field Validation" name="should validate textarea field" time="0">
     </testcase>
-    <testcase classname="Schema Validation Tests › Field Validation" name="should validate slider field" time="0.001">
+    <testcase classname="Schema Validation Tests › Field Validation" name="should validate slider field" time="0">
     </testcase>
-    <testcase classname="Schema Validation Tests › Field Validation" name="should validate radiogroup field" time="0">
+    <testcase classname="Schema Validation Tests › Field Validation" name="should validate radiogroup field" time="0.001">
     </testcase>
     <testcase classname="Schema Validation Tests › Field Validation" name="should validate tagbox field" time="0">
     </testcase>
-    <testcase classname="Schema Validation Tests › Structural Field Validation" name="should validate group field" time="0">
+    <testcase classname="Schema Validation Tests › Structural Field Validation" name="should validate group field" time="0.001">
     </testcase>
-    <testcase classname="Schema Validation Tests › Structural Field Validation" name="should validate tabbed field" time="0.001">
+    <testcase classname="Schema Validation Tests › Structural Field Validation" name="should validate tabbed field" time="0">
     </testcase>
-    <testcase classname="Schema Validation Tests › Structural Field Validation" name="should validate button field" time="0">
+    <testcase classname="Schema Validation Tests › Structural Field Validation" name="should validate button field" time="0.001">
     </testcase>
     <testcase classname="Schema Validation Tests › Structural Field Validation" name="should validate button field with onClick object (handler + params)" time="0">
     </testcase>
-    <testcase classname="Schema Validation Tests › Structural Field Validation" name="should validate button field with onClick object (handler only)" time="0.001">
+    <testcase classname="Schema Validation Tests › Structural Field Validation" name="should validate button field with onClick object (handler only)" time="0">
     </testcase>
     <testcase classname="Schema Validation Tests › Structural Field Validation" name="should reject button field with onClick object missing handler" time="0">
     </testcase>
@@ -195,7 +195,7 @@
     </testcase>
     <testcase classname="Schema Validation Tests › Complex Field Validation" name="should validate form field" time="0.001">
     </testcase>
-    <testcase classname="Schema Validation Tests › View Validation" name="should validate grid view" time="0.004">
+    <testcase classname="Schema Validation Tests › View Validation" name="should validate grid view" time="0.006">
     </testcase>
     <testcase classname="Schema Validation Tests › View Validation" name="should validate form view" time="0.001">
     </testcase>
@@ -213,7 +213,7 @@
     </testcase>
     <testcase classname="Schema Validation Tests › ConditionalExpression Validation (visibleIf/disabledIf/readonlyIf)" name="should validate simplified &quot;in&quot;: { field: [value1, value2] }" time="0">
     </testcase>
-    <testcase classname="Schema Validation Tests › ConditionalExpression Validation (visibleIf/disabledIf/readonlyIf)" name="should validate explicit &quot;in&quot; with array: { field: [&quot;in&quot;, [values]] }" time="0">
+    <testcase classname="Schema Validation Tests › ConditionalExpression Validation (visibleIf/disabledIf/readonlyIf)" name="should validate explicit &quot;in&quot; with array: { field: [&quot;in&quot;, [values]] }" time="0.001">
     </testcase>
     <testcase classname="Schema Validation Tests › ConditionalExpression Validation (visibleIf/disabledIf/readonlyIf)" name="should validate comparison operators with scalar: { field: [&quot;&gt;&quot;, 65] }" time="0">
     </testcase>
@@ -221,9 +221,9 @@
     </testcase>
     <testcase classname="Schema Validation Tests › ConditionalExpression Validation (visibleIf/disabledIf/readonlyIf)" name="should validate notIn operator: { field: [&quot;notIn&quot;, [values]] }" time="0">
     </testcase>
-    <testcase classname="Schema Validation Tests › ConditionalExpression Validation (visibleIf/disabledIf/readonlyIf)" name="should validate AND operator with multiple conditions" time="0.001">
+    <testcase classname="Schema Validation Tests › ConditionalExpression Validation (visibleIf/disabledIf/readonlyIf)" name="should validate AND operator with multiple conditions" time="0">
     </testcase>
-    <testcase classname="Schema Validation Tests › ConditionalExpression Validation (visibleIf/disabledIf/readonlyIf)" name="should validate OR operator with multiple conditions" time="0">
+    <testcase classname="Schema Validation Tests › ConditionalExpression Validation (visibleIf/disabledIf/readonlyIf)" name="should validate OR operator with multiple conditions" time="0.001">
     </testcase>
     <testcase classname="Schema Validation Tests › ConditionalExpression Validation (visibleIf/disabledIf/readonlyIf)" name="should validate NOT operator" time="0">
     </testcase>
@@ -237,29 +237,29 @@
     </testcase>
     <testcase classname="Schema Validation Tests › ConditionalExpression Validation (visibleIf/disabledIf/readonlyIf)" name="should validate readonlyIf with same conditional formats" time="0">
     </testcase>
-    <testcase classname="Schema Validation Tests › ConditionalExpression Validation (visibleIf/disabledIf/readonlyIf)" name="should validate requiredIf with same conditional formats" time="0">
+    <testcase classname="Schema Validation Tests › ConditionalExpression Validation (visibleIf/disabledIf/readonlyIf)" name="should validate requiredIf with same conditional formats" time="0.002">
     </testcase>
     <testcase classname="Schema Validation Tests › ConditionalExpression Validation (visibleIf/disabledIf/readonlyIf)" name="should validate boolean values in conditions" time="0">
     </testcase>
     <testcase classname="Schema Validation Tests › ConditionalExpression Validation (visibleIf/disabledIf/readonlyIf)" name="should validate null values in conditions" time="0">
     </testcase>
-    <testcase classname="Schema Validation Tests › ConditionalExpression Validation (visibleIf/disabledIf/readonlyIf)" name="should validate numeric values in conditions" time="0">
+    <testcase classname="Schema Validation Tests › ConditionalExpression Validation (visibleIf/disabledIf/readonlyIf)" name="should validate numeric values in conditions" time="0.001">
     </testcase>
     <testcase classname="Schema Validation Tests › Schema Export" name="should export complete schema" time="0">
     </testcase>
   </testsuite>
-  <testsuite name="src/__tests__/seed-data-validation.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-12-07T11:00:48" time="2.356" tests="11">
-    <testcase classname="Seed Data Validation Tests › Grid View Configuration" name="should validate grid view from seed data" time="0.007">
+  <testsuite name="src/__tests__/seed-data-validation.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-12-19T15:31:02" time="2.734" tests="11">
+    <testcase classname="Seed Data Validation Tests › Grid View Configuration" name="should validate grid view from seed data" time="0.008">
     </testcase>
-    <testcase classname="Seed Data Validation Tests › Tree View Configuration" name="should validate tree view from seed data" time="0.001">
+    <testcase classname="Seed Data Validation Tests › Tree View Configuration" name="should validate tree view from seed data" time="0">
     </testcase>
     <testcase classname="Seed Data Validation Tests › Form View Configuration" name="should validate form view from seed data" time="0.001">
     </testcase>
-    <testcase classname="Seed Data Validation Tests › Form with Grid Configuration" name="should validate form with embedded grid from seed data" time="0.001">
+    <testcase classname="Seed Data Validation Tests › Form with Grid Configuration" name="should validate form with embedded grid from seed data" time="0">
     </testcase>
     <testcase classname="Seed Data Validation Tests › Grouped and Tabbed Form Configuration" name="should validate grouped and tabbed form from seed data" time="0.001">
     </testcase>
-    <testcase classname="Seed Data Validation Tests › Form Editor Configuration" name="should validate form editor from seed data" time="0">
+    <testcase classname="Seed Data Validation Tests › Form Editor Configuration" name="should validate form editor from seed data" time="0.001">
     </testcase>
     <testcase classname="Seed Data Validation Tests › Dynamic Form Demo Configuration" name="should validate dynamic form demo from seed data" time="0.001">
     </testcase>
@@ -267,21 +267,21 @@
     </testcase>
     <testcase classname="Seed Data Validation Tests › DevExtreme Tree/Grid Properties" name="should validate tree config with DevExtreme display properties" time="0">
     </testcase>
-    <testcase classname="Seed Data Validation Tests › DevExtreme Tree/Grid Properties" name="should validate group with colCount" time="0">
+    <testcase classname="Seed Data Validation Tests › DevExtreme Tree/Grid Properties" name="should validate group with colCount" time="0.001">
     </testcase>
     <testcase classname="Seed Data Validation Tests › DevExtreme Tree/Grid Properties" name="should validate group without colCount (should use default)" time="0">
     </testcase>
   </testsuite>
-  <testsuite name="src/__tests__/integration/full-workflow.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-12-07T11:00:48" time="2.415" tests="6">
-    <testcase classname="Integration Tests › Full Migration and Validation Workflow" name="should migrate v1 config and validate successfully" time="0.02">
+  <testsuite name="src/__tests__/integration/full-workflow.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-12-19T15:31:02" time="2.807" tests="6">
+    <testcase classname="Integration Tests › Full Migration and Validation Workflow" name="should migrate v1 config and validate successfully" time="0.022">
     </testcase>
-    <testcase classname="Integration Tests › Performance-Monitored Validation with Cache" name="should validate with performance monitoring" time="0.012">
+    <testcase classname="Integration Tests › Performance-Monitored Validation with Cache" name="should validate with performance monitoring" time="0.01">
     </testcase>
-    <testcase classname="Integration Tests › Multi-Level Validation" name="should enforce different validation levels" time="0.007">
+    <testcase classname="Integration Tests › Multi-Level Validation" name="should enforce different validation levels" time="0.009">
     </testcase>
-    <testcase classname="Integration Tests › Complete Config Lifecycle" name="should handle config from creation to usage" time="0.008">
+    <testcase classname="Integration Tests › Complete Config Lifecycle" name="should handle config from creation to usage" time="0.007">
     </testcase>
-    <testcase classname="Integration Tests › Error Handling" name="should handle invalid migration gracefully" time="0.005">
+    <testcase classname="Integration Tests › Error Handling" name="should handle invalid migration gracefully" time="0.006">
     </testcase>
     <testcase classname="Integration Tests › Error Handling" name="should handle invalid config structure" time="0.001">
     </testcase>
