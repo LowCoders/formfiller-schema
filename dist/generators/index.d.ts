@@ -3,5 +3,6 @@
  *
  * @module generators
  */
-export * from './TypeGenerator';
-export * from './DocGenerator';
+export * from './TypeGenerator.js';
+export * from './DocGenerator.js';
+//# sourceMappingURL=index.d.ts.map

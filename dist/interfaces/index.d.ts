@@ -12,8 +12,14 @@ export type ConditionalExpression = {
  * Used in ValidationRule.when property
  */
 export type ValidationCondition = ConditionalExpression;
+/**
+ * All supported crossField validation types.
+ * The type name IS the callback name - no conversion needed.
+ */
+export declare const CROSS_FIELD_TYPES: readonly ["equals", "notEquals", "greaterThan", "lessThan", "sumEquals", "percentageSum", "dateInRange", "atLeastOne"];
+export type CrossFieldType = (typeof CROSS_FIELD_TYPES)[number];
 export interface ValidationRule {
-    type: 'required' | 'stringLength' | 'arrayLength' | 'range' | 'pattern' | 'email' | 'numeric' | 'compare' | 'custom' | 'async' | 'computed' | 'temporal' | 'plugin' | 'crossFieldEquals' | 'crossFieldNotEquals' | 'crossFieldGreaterThan' | 'crossFieldLessThan' | 'crossFieldSumEquals' | 'crossFieldPercentageSum' | 'crossFieldDateInRange' | 'crossFieldAtLeastOne' | 'crossFieldCustom';
+    type: 'required' | 'stringLength' | 'arrayLength' | 'range' | 'pattern' | 'email' | 'numeric' | 'compare' | 'custom' | 'async' | 'computed' | 'temporal' | 'plugin' | 'equals' | 'notEquals' | 'greaterThan' | 'lessThan' | 'sumEquals' | 'percentageSum' | 'dateInRange' | 'atLeastOne';
     message?: string;
     /**
      * Determines where validation errors should be displayed
@@ -46,10 +52,6 @@ export interface ValidationRule {
     apiPayload?: Record<string, any>;
     apiTimeout?: number;
     targetFields?: string[];
-    crossFieldValidator?: string | {
-        name: string;
-        params?: Record<string, any>;
-    } | ((values: Record<string, any>, context: any) => boolean);
     compute?: string | ((values: Record<string, any>, context: any) => any);
     returnToFrontend?: boolean;
     storeResult?: boolean;
@@ -571,3 +573,4 @@ export interface ComputedRule {
     storeResult?: boolean;
 }
 export type FieldConfig = TextFieldConfig | NumberFieldConfig | DateFieldConfig | DateTimeFieldConfig | TimeFieldConfig | DateRangeFieldConfig | BooleanFieldConfig | SwitchFieldConfig | DropdownFieldConfig | TagBoxFieldConfig | RadioGroupFieldConfig | SliderFieldConfig | RangeSliderFieldConfig | TextAreaFieldConfig | HtmlEditorFieldConfig | ColorBoxFieldConfig | AutocompleteFieldConfig | LookupFieldConfig | CalendarFieldConfig | GridFieldConfig | TreeFieldConfig | FormFieldConfig | GroupFieldConfig | TabbedFieldConfig | TabFieldConfig | StepperFieldConfig | StepFieldConfig | ButtonFieldConfig | EmptyFieldConfig | InfoFieldConfig;
+//# sourceMappingURL=index.d.ts.map

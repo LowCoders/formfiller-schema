@@ -4,7 +4,7 @@
  * Tests for deprecated field management
  */
 
-import { DeprecationManager, getDeprecationManager } from '../../core/DeprecationManager';
+import { DeprecationManager, getDeprecationManager } from '../../core/DeprecationManager.js';
 
 describe('DeprecationManager', () => {
   let manager: DeprecationManager;

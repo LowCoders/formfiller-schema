@@ -51,3 +51,4 @@ export declare class SchemaVersionManager {
  * Get the singleton instance of SchemaVersionManager
  */
 export declare function getVersionManager(): SchemaVersionManager;
+//# sourceMappingURL=SchemaVersionManager.d.ts.map

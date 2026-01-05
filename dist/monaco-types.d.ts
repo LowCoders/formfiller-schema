@@ -2,7 +2,7 @@
  * FormFiller Schema - Monaco Editor Type Definitions Bundle
  * 
  * Auto-generated type definitions for Monaco Editor IntelliSense
- * Generated: 2025-12-19T16:15:47.609Z
+ * Generated: 2026-01-05T16:38:02.894Z
  */
 
 declare module 'formfiller-schema' {
@@ -21,8 +21,14 @@ declare type ConditionalExpression = {
  * Used in ValidationRule.when property
  */
 declare type ValidationCondition = ConditionalExpression;
+/**
+ * All supported crossField validation types.
+ * The type name IS the callback name - no conversion needed.
+ */
+declare const CROSS_FIELD_TYPES: readonly ["equals", "notEquals", "greaterThan", "lessThan", "sumEquals", "percentageSum", "dateInRange", "atLeastOne"];
+declare type CrossFieldType = (typeof CROSS_FIELD_TYPES)[number];
 declare interface ValidationRule {
-    type: 'required' | 'stringLength' | 'arrayLength' | 'range' | 'pattern' | 'email' | 'numeric' | 'compare' | 'custom' | 'async' | 'computed' | 'temporal' | 'plugin' | 'crossFieldEquals' | 'crossFieldNotEquals' | 'crossFieldGreaterThan' | 'crossFieldLessThan' | 'crossFieldSumEquals' | 'crossFieldPercentageSum' | 'crossFieldDateInRange' | 'crossFieldAtLeastOne' | 'crossFieldCustom';
+    type: 'required' | 'stringLength' | 'arrayLength' | 'range' | 'pattern' | 'email' | 'numeric' | 'compare' | 'custom' | 'async' | 'computed' | 'temporal' | 'plugin' | 'equals' | 'notEquals' | 'greaterThan' | 'lessThan' | 'sumEquals' | 'percentageSum' | 'dateInRange' | 'atLeastOne';
     message?: string;
     /**
      * Determines where validation errors should be displayed
@@ -55,10 +61,6 @@ declare interface ValidationRule {
     apiPayload?: Record<string, any>;
     apiTimeout?: number;
     targetFields?: string[];
-    crossFieldValidator?: string | {
-        name: string;
-        params?: Record<string, any>;
-    } | ((values: Record<string, any>, context: any) => boolean);
     compute?: string | ((values: Record<string, any>, context: any) => any);
     returnToFrontend?: boolean;
     storeResult?: boolean;
@@ -580,7 +582,7 @@ declare interface ComputedRule {
     storeResult?: boolean;
 }
 declare type FieldConfig = TextFieldConfig | NumberFieldConfig | DateFieldConfig | DateTimeFieldConfig | TimeFieldConfig | DateRangeFieldConfig | BooleanFieldConfig | SwitchFieldConfig | DropdownFieldConfig | TagBoxFieldConfig | RadioGroupFieldConfig | SliderFieldConfig | RangeSliderFieldConfig | TextAreaFieldConfig | HtmlEditorFieldConfig | ColorBoxFieldConfig | AutocompleteFieldConfig | LookupFieldConfig | CalendarFieldConfig | GridFieldConfig | TreeFieldConfig | FormFieldConfig | GroupFieldConfig | TabbedFieldConfig | TabFieldConfig | StepperFieldConfig | StepFieldConfig | ButtonFieldConfig | EmptyFieldConfig | InfoFieldConfig;
-
+//# sourceMappingURL=index.d.ts.map
 
 /**
  * Deprecation Manager
@@ -666,7 +668,7 @@ declare class DeprecationManager {
  * Get the singleton instance of DeprecationManager
  */
 declare function getDeprecationManager(): DeprecationManager;
-
+//# sourceMappingURL=DeprecationManager.d.ts.map
 
 /**
  * Performance Monitor
@@ -759,7 +761,7 @@ declare function getPerformanceMonitor(): PerformanceMonitor;
  * Create a new PerformanceMonitor instance (for testing or isolated usage)
  */
 declare function createPerformanceMonitor(): PerformanceMonitor;
-
+//# sourceMappingURL=PerformanceMonitor.d.ts.map
 
 /**
  * Schema Cache
@@ -770,6 +772,8 @@ declare function createPerformanceMonitor(): PerformanceMonitor;
  * Uses AJV 2019-09 for JSON Schema 2019-09 support (unevaluatedProperties).
  */
 
+declare const Ajv2019: any;
+declare type Ajv2019Type = InstanceType<typeof Ajv2019>;
 declare interface CacheStats {
     hits: number;
     misses: number;
@@ -819,7 +823,7 @@ declare class SchemaCache {
     /**
      * Get the underlying AJV instance
      */
-    getAjv(): Ajv2019;
+    getAjv(): Ajv2019Type;
     /**
      * Add a schema to AJV instance
      */
@@ -837,7 +841,8 @@ declare function getSchemaCache(): SchemaCache;
  * Create a new SchemaCache instance (for testing or isolated usage)
  */
 declare function createSchemaCache(ajvOptions?: any): SchemaCache;
-
+{};
+//# sourceMappingURL=SchemaCache.d.ts.map
 
 /**
  * Schema Defaults
@@ -922,7 +927,7 @@ declare function withDefaults<T extends object>(obj: Partial<T>, defaults: T): T
  * Helper function for deep default application
  */
 declare function withDeepDefaults<T extends object>(obj: Partial<T>, defaults: T): T;
-
+//# sourceMappingURL=SchemaDefaults.d.ts.map
 
 /**
  * Schema Validator
@@ -1016,7 +1021,7 @@ declare class SchemaValidator {
      */
     clearCache(): void;
 }
-
+//# sourceMappingURL=SchemaValidator.d.ts.map
 
 /**
  * Schema Version Manager
@@ -1071,6 +1076,6 @@ declare class SchemaVersionManager {
  * Get the singleton instance of SchemaVersionManager
  */
 declare function getVersionManager(): SchemaVersionManager;
-
+//# sourceMappingURL=SchemaVersionManager.d.ts.map
 
 }

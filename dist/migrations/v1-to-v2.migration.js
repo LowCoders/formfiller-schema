@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Migration from v1.0.0 to v2.0.0
  *
@@ -8,9 +7,7 @@
  * - Add default preferences structure
  * - Update version to 2.0.0
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.v1ToV2Migration = void 0;
-exports.v1ToV2Migration = {
+export const v1ToV2Migration = {
     fromVersion: '1.0.0',
     toVersion: '2.0.0',
     description: 'Migrate from v1.0.0 to v2.0.0: columns->items, add preferences',

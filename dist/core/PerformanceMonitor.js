@@ -1,19 +1,12 @@
-"use strict";
 /**
  * Performance Monitor
  *
  * Monitors and tracks performance metrics for schema operations.
  * Useful for identifying bottlenecks and optimizing validation.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.PerformanceMonitor = void 0;
-exports.getPerformanceMonitor = getPerformanceMonitor;
-exports.createPerformanceMonitor = createPerformanceMonitor;
-class PerformanceMonitor {
-    constructor() {
-        this.metrics = new Map();
-        this.enabled = true;
-    }
+export class PerformanceMonitor {
+    metrics = new Map();
+    enabled = true;
     /**
      * Measure the execution time of a function
      */
@@ -183,13 +176,12 @@ class PerformanceMonitor {
         return stats ? stats.avgDuration > threshold : false;
     }
 }
-exports.PerformanceMonitor = PerformanceMonitor;
 // Singleton instance
 let instance = null;
 /**
  * Get the singleton instance of PerformanceMonitor
  */
-function getPerformanceMonitor() {
+export function getPerformanceMonitor() {
     if (!instance) {
         instance = new PerformanceMonitor();
     }
@@ -198,6 +190,6 @@ function getPerformanceMonitor() {
 /**
  * Create a new PerformanceMonitor instance (for testing or isolated usage)
  */
-function createPerformanceMonitor() {
+export function createPerformanceMonitor() {
     return new PerformanceMonitor();
 }

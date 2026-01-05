@@ -1,15 +1,53 @@
-"use strict";
 /**
  * Schema Defaults
  *
  * Centralized repository for default values used across the schema.
  * Provides type-safe default application for configurations.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SchemaDefaults = void 0;
-exports.withDefaults = withDefaults;
-exports.withDeepDefaults = withDeepDefaults;
-class SchemaDefaults {
+export class SchemaDefaults {
+    /**
+     * Default values for FormPreferences
+     */
+    static FormPreferences = {
+        addSaveBtn: false,
+        saveLimit: null,
+        saveUrl: undefined,
+    };
+    /**
+     * Default values for ItemConfig editing settings
+     */
+    static ItemConfigEditing = {
+        allowAdding: false,
+        allowUpdating: false,
+        allowDeleting: false,
+        mode: 'row',
+    };
+    /**
+     * Default values for ItemConfig
+     */
+    static ItemConfig = {
+        editing: SchemaDefaults.ItemConfigEditing,
+        items: [],
+    };
+    /**
+     * Default values for GroupFieldConfig
+     */
+    static GroupFieldConfig = {
+        colCount: 1, // DevExtreme default
+        excludeFromPath: false,
+    };
+    /**
+     * Default values for Tree/Grid ItemConfig (DevExtreme-specific display options)
+     */
+    static TreeItemConfig = {
+        autoExpandAll: false,
+        showRowLines: true,
+        showBorders: true,
+        columnAutoWidth: false,
+        allowColumnReordering: false,
+        allowColumnResizing: true,
+        showColumnHeaders: true,
+    };
     /**
      * Apply defaults to a partial object
      * @param obj Partial object to fill with defaults
@@ -61,59 +99,15 @@ class SchemaDefaults {
         return this.deepApplyDefaults(overrides, this.FormPreferences);
     }
 }
-exports.SchemaDefaults = SchemaDefaults;
-/**
- * Default values for FormPreferences
- */
-SchemaDefaults.FormPreferences = {
-    addSaveBtn: false,
-    saveLimit: null,
-    saveUrl: undefined,
-};
-/**
- * Default values for ItemConfig editing settings
- */
-SchemaDefaults.ItemConfigEditing = {
-    allowAdding: false,
-    allowUpdating: false,
-    allowDeleting: false,
-    mode: 'row',
-};
-/**
- * Default values for ItemConfig
- */
-SchemaDefaults.ItemConfig = {
-    editing: SchemaDefaults.ItemConfigEditing,
-    items: [],
-};
-/**
- * Default values for GroupFieldConfig
- */
-SchemaDefaults.GroupFieldConfig = {
-    colCount: 1, // DevExtreme default
-    excludeFromPath: false,
-};
-/**
- * Default values for Tree/Grid ItemConfig (DevExtreme-specific display options)
- */
-SchemaDefaults.TreeItemConfig = {
-    autoExpandAll: false,
-    showRowLines: true,
-    showBorders: true,
-    columnAutoWidth: false,
-    allowColumnReordering: false,
-    allowColumnResizing: true,
-    showColumnHeaders: true,
-};
 /**
  * Helper function for quick default application
  */
-function withDefaults(obj, defaults) {
+export function withDefaults(obj, defaults) {
     return SchemaDefaults.applyDefaults(obj, defaults);
 }
 /**
  * Helper function for deep default application
  */
-function withDeepDefaults(obj, defaults) {
+export function withDeepDefaults(obj, defaults) {
     return SchemaDefaults.deepApplyDefaults(obj, defaults);
 }

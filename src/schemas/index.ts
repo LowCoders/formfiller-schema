@@ -1,13 +1,6 @@
-// Import transformed schema from dist if available (for better Monaco/unevaluatedProperties support)
-// Falls back to src schema during development
-let completeSchema: any;
+// Import complete-schema.json directly
+// TypeScript compiles this with resolveJsonModule
+// Bundlers (Vite) will inline the JSON as a JS object
+import completeSchemaData from './complete-schema.json' with { type: 'json' };
 
-try {
-  // Try to use the transformed dist schema first
-  completeSchema = require('../../dist/schemas/complete-schema.json');
-} catch {
-  // Fallback to src schema (before build)
-  completeSchema = require('./complete-schema.json');
-}
-
-export { completeSchema };
+export const completeSchema = completeSchemaData;

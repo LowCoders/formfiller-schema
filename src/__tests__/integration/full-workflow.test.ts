@@ -13,7 +13,7 @@ import {
   SchemaDefaults,
   ValidationLevel,
   SchemaValidator,
-} from '../..';
+} from '../../index.js';
 
 describe('Integration Tests', () => {
   describe('Full Migration and Validation Workflow', () => {

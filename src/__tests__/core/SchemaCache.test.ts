@@ -4,7 +4,7 @@
  * Tests for schema caching functionality
  */
 
-import { SchemaCache, createSchemaCache } from '../../core/SchemaCache';
+import { SchemaCache, createSchemaCache } from '../../core/SchemaCache.js';
 
 describe('SchemaCache', () => {
   let cache: SchemaCache;

@@ -1,17 +1,11 @@
-"use strict";
 /**
  * Schema Version Manager
  *
  * Handles schema version migrations between different versions.
  * Supports automatic migration chains and version compatibility checks.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SchemaVersionManager = void 0;
-exports.getVersionManager = getVersionManager;
-class SchemaVersionManager {
-    constructor() {
-        this.migrations = [];
-    }
+export class SchemaVersionManager {
+    migrations = [];
     /**
      * Register a migration path
      */
@@ -106,13 +100,12 @@ class SchemaVersionManager {
         return this.compareVersions(v1, v2) <= 0;
     }
 }
-exports.SchemaVersionManager = SchemaVersionManager;
 // Singleton instance
 let instance = null;
 /**
  * Get the singleton instance of SchemaVersionManager
  */
-function getVersionManager() {
+export function getVersionManager() {
     if (!instance) {
         instance = new SchemaVersionManager();
     }

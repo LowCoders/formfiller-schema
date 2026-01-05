@@ -5,7 +5,7 @@
  * Provides type-safe default application for configurations.
  */
 
-import type { FormPreferences, ItemConfig } from '../interfaces';
+import type { FormPreferences, ItemConfig } from '../interfaces/index.js';
 
 export class SchemaDefaults {
   /**

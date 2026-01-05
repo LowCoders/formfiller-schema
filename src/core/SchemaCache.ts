@@ -7,7 +7,9 @@
  * Uses AJV 2019-09 for JSON Schema 2019-09 support (unevaluatedProperties).
  */
 
-import Ajv2019, { ValidateFunction } from 'ajv/dist/2019';
+import Ajv2019pkg, { ValidateFunction } from 'ajv/dist/2019.js';
+const Ajv2019 = (Ajv2019pkg as any).default || Ajv2019pkg;
+type Ajv2019Type = InstanceType<typeof Ajv2019>;
 
 export interface CacheStats {
   hits: number;
@@ -17,7 +19,7 @@ export interface CacheStats {
 
 export class SchemaCache {
   private cache: Map<string, ValidateFunction> = new Map();
-  private ajv: Ajv2019;
+  private ajv: Ajv2019Type;
   private stats: CacheStats = {
     hits: 0,
     misses: 0,
@@ -124,7 +126,7 @@ export class SchemaCache {
   /**
    * Get the underlying AJV instance
    */
-  getAjv(): Ajv2019 {
+  getAjv(): Ajv2019Type {
     return this.ajv;
   }
 

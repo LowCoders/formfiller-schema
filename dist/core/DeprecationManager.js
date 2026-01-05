@@ -1,19 +1,13 @@
-"use strict";
 /**
  * Deprecation Manager
  *
  * Manages deprecated fields and provides warnings for their usage.
  * Helps with smooth transitions between schema versions.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeprecationManager = void 0;
-exports.getDeprecationManager = getDeprecationManager;
-class DeprecationManager {
-    constructor() {
-        this.deprecations = new Map();
-        this.warningShown = new Set();
-        this.enableLogging = true;
-    }
+export class DeprecationManager {
+    deprecations = new Map();
+    warningShown = new Set();
+    enableLogging = true;
     /**
      * Mark a field as deprecated
      */
@@ -164,13 +158,12 @@ class DeprecationManager {
         current[keys[keys.length - 1]] = value;
     }
 }
-exports.DeprecationManager = DeprecationManager;
 // Singleton instance
 let instance = null;
 /**
  * Get the singleton instance of DeprecationManager
  */
-function getDeprecationManager() {
+export function getDeprecationManager() {
     if (!instance) {
         instance = new DeprecationManager();
         // Register known deprecations

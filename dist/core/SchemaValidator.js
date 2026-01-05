@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Schema Validator
  *
@@ -7,22 +6,19 @@
  *
  * Uses AJV 2019-09 for JSON Schema 2019-09 support (unevaluatedProperties).
  */
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SchemaValidator = exports.ValidationLevel = void 0;
-const _2019_1 = __importDefault(require("ajv/dist/2019"));
-var ValidationLevel;
+import Ajv2019pkg from 'ajv/dist/2019.js';
+const Ajv2019 = Ajv2019pkg.default || Ajv2019pkg;
+export var ValidationLevel;
 (function (ValidationLevel) {
     ValidationLevel["STRICT"] = "strict";
     ValidationLevel["LOOSE"] = "loose";
     ValidationLevel["DEVELOPMENT"] = "development";
-})(ValidationLevel || (exports.ValidationLevel = ValidationLevel = {}));
-class SchemaValidator {
+})(ValidationLevel || (ValidationLevel = {}));
+export class SchemaValidator {
+    ajv;
+    compiledValidators = new Map();
     constructor() {
-        this.compiledValidators = new Map();
-        this.ajv = new _2019_1.default({
+        this.ajv = new Ajv2019({
             allErrors: true,
             strict: false,
             validateFormats: false,
@@ -205,7 +201,7 @@ class SchemaValidator {
      * Get nested value from object using dot notation
      */
     getNestedValue(obj, path) {
-        return path.split('.').reduce((current, key) => current === null || current === void 0 ? void 0 : current[key], obj);
+        return path.split('.').reduce((current, key) => current?.[key], obj);
     }
     /**
      * Clear compiled validator cache
@@ -214,4 +210,3 @@ class SchemaValidator {
         this.compiledValidators.clear();
     }
 }
-exports.SchemaValidator = SchemaValidator;

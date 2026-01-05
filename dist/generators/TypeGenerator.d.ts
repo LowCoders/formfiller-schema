@@ -38,3 +38,4 @@ export declare class TypeGenerator {
  *   ts-node scripts/generate-types.ts
  */
 export declare function generateTypes(): Promise<void>;
+//# sourceMappingURL=TypeGenerator.d.ts.map

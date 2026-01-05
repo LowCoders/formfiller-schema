@@ -7,5 +7,6 @@
  * - Add default preferences structure
  * - Update version to 2.0.0
  */
-import { SchemaMigration } from '../core/SchemaVersionManager';
+import { SchemaMigration } from '../core/SchemaVersionManager.js';
 export declare const v1ToV2Migration: SchemaMigration;
+//# sourceMappingURL=v1-to-v2.migration.d.ts.map

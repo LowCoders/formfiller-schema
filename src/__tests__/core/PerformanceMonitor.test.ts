@@ -4,7 +4,7 @@
  * Tests for performance monitoring functionality
  */
 
-import { PerformanceMonitor, createPerformanceMonitor } from '../../core/PerformanceMonitor';
+import { PerformanceMonitor, createPerformanceMonitor } from '../../core/PerformanceMonitor.js';
 
 describe('PerformanceMonitor', () => {
   let monitor: PerformanceMonitor;

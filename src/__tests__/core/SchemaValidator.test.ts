@@ -4,7 +4,7 @@
  * Tests for validation levels and custom rules
  */
 
-import { SchemaValidator, ValidationLevel } from '../../core/SchemaValidator';
+import { SchemaValidator, ValidationLevel } from '../../core/SchemaValidator.js';
 
 describe('SchemaValidator', () => {
   let validator: SchemaValidator;

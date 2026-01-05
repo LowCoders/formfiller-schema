@@ -98,70 +98,22 @@
             {
               "properties": {
                 "type": {
-                  "const": "crossField",
-                  "description": "Legacy crossField type - prefer crossField* types"
-                },
-                "targetFields": {
-                  "type": "array",
-                  "items": { "type": "string" },
-                  "description": "Field paths to validate together"
-                },
-                "crossFieldValidator": {
-                  "oneOf": [
-                    { "type": "string" },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "name": { "type": "string" },
-                        "params": { "type": "object" }
-                      },
-                      "required": ["name"]
-                    }
-                  ]
-                }
-              },
-              "required": ["type", "targetFields"]
-            }
-          ]
-        },
-        {
-          "type": "object",
-          "allOf": [
-            { "$ref": "#/definitions/ValidationRuleBase" },
-            {
-              "properties": {
-                "type": {
                   "enum": [
-                    "crossFieldEquals",
-                    "crossFieldNotEquals",
-                    "crossFieldGreaterThan",
-                    "crossFieldLessThan",
-                    "crossFieldSumEquals",
-                    "crossFieldPercentageSum",
-                    "crossFieldDateInRange",
-                    "crossFieldAtLeastOne",
-                    "crossFieldCustom"
+                    "equals",
+                    "notEquals",
+                    "greaterThan",
+                    "lessThan",
+                    "sumEquals",
+                    "percentageSum",
+                    "dateInRange",
+                    "atLeastOne"
                   ],
-                  "description": "CrossField validator types - targetFields is required"
+                  "description": "CrossField validator types - type IS the callback name"
                 },
                 "targetFields": {
                   "type": "array",
                   "items": { "type": "string" },
                   "description": "Field paths to validate together"
-                },
-                "crossFieldValidator": {
-                  "oneOf": [
-                    { "type": "string" },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "name": { "type": "string" },
-                        "params": { "type": "object" }
-                      },
-                      "required": ["name"]
-                    }
-                  ],
-                  "description": "Custom validator for crossFieldCustom type"
                 }
               },
               "required": ["type", "targetFields"]

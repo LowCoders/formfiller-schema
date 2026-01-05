@@ -9,8 +9,8 @@ import {
   SchemaMigration,
   SchemaVersionManager,
   getVersionManager,
-} from '../core/SchemaVersionManager';
-import { v1ToV2Migration } from './v1-to-v2.migration';
+} from '../core/SchemaVersionManager.js';
+import { v1ToV2Migration } from './v1-to-v2.migration.js';
 
 export class MigrationRegistry {
   private versionManager: SchemaVersionManager;

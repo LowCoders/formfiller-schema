@@ -7,7 +7,9 @@
  * Uses AJV 2019-09 for JSON Schema 2019-09 support (unevaluatedProperties).
  */
 
-import Ajv2019, { ValidateFunction, ErrorObject } from 'ajv/dist/2019';
+import Ajv2019pkg, { ValidateFunction, ErrorObject } from 'ajv/dist/2019.js';
+const Ajv2019 = (Ajv2019pkg as any).default || Ajv2019pkg;
+type Ajv2019Type = InstanceType<typeof Ajv2019>;
 
 export enum ValidationLevel {
   STRICT = 'strict',
@@ -47,7 +49,7 @@ export interface ValidationWarning {
 }
 
 export class SchemaValidator {
-  private ajv: Ajv2019;
+  private ajv: Ajv2019Type;
   private compiledValidators: Map<string, ValidateFunction> = new Map();
 
   constructor() {

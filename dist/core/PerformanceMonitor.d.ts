@@ -89,3 +89,4 @@ export declare function getPerformanceMonitor(): PerformanceMonitor;
  * Create a new PerformanceMonitor instance (for testing or isolated usage)
  */
 export declare function createPerformanceMonitor(): PerformanceMonitor;
+//# sourceMappingURL=PerformanceMonitor.d.ts.map

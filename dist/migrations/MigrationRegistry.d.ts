@@ -4,7 +4,7 @@
  * Central registry for all schema migrations.
  * Auto-registers migrations and provides easy access.
  */
-import { SchemaMigration, SchemaVersionManager } from '../core/SchemaVersionManager';
+import { SchemaMigration, SchemaVersionManager } from '../core/SchemaVersionManager.js';
 export declare class MigrationRegistry {
     private versionManager;
     constructor(versionManager?: SchemaVersionManager);
@@ -33,3 +33,4 @@ export declare class MigrationRegistry {
  * Get the singleton instance of MigrationRegistry
  */
 export declare function getMigrationRegistry(): MigrationRegistry;
+//# sourceMappingURL=MigrationRegistry.d.ts.map

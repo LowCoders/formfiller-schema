@@ -8,7 +8,7 @@
  * - Update version to 2.0.0
  */
 
-import { SchemaMigration } from '../core/SchemaVersionManager';
+import { SchemaMigration } from '../core/SchemaVersionManager.js';
 
 export const v1ToV2Migration: SchemaMigration = {
   fromVersion: '1.0.0',

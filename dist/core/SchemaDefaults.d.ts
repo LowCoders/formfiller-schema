@@ -4,7 +4,7 @@
  * Centralized repository for default values used across the schema.
  * Provides type-safe default application for configurations.
  */
-import type { FormPreferences, ItemConfig } from '../interfaces';
+import type { FormPreferences, ItemConfig } from '../interfaces/index.js';
 export declare class SchemaDefaults {
     /**
      * Default values for FormPreferences
@@ -81,3 +81,4 @@ export declare function withDefaults<T extends object>(obj: Partial<T>, defaults
  * Helper function for deep default application
  */
 export declare function withDeepDefaults<T extends object>(obj: Partial<T>, defaults: T): T;
+//# sourceMappingURL=SchemaDefaults.d.ts.map

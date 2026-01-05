@@ -4,9 +4,9 @@
  * @module core
  */
 
-export * from './SchemaVersionManager';
-export * from './SchemaValidator';
-export * from './SchemaDefaults';
-export * from './DeprecationManager';
-export * from './SchemaCache';
-export * from './PerformanceMonitor';
+export * from './SchemaVersionManager.js';
+export * from './SchemaValidator.js';
+export * from './SchemaDefaults.js';
+export * from './DeprecationManager.js';
+export * from './SchemaCache.js';
+export * from './PerformanceMonitor.js';

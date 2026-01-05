@@ -1,5 +1,5 @@
-import { validateField, validateView } from '../index';
-import { FieldConfig, ViewConfig } from '../interfaces';
+import { validateField, validateView } from '../index.js';
+import { FieldConfig, ViewConfig } from '../interfaces/index.js';
 
 // Sample data from seedData.js converted to new schema format
 describe('Seed Data Validation Tests', () => {

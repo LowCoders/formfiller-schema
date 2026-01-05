@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Schema Cache
  *
@@ -7,23 +6,18 @@
  *
  * Uses AJV 2019-09 for JSON Schema 2019-09 support (unevaluatedProperties).
  */
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SchemaCache = void 0;
-exports.getSchemaCache = getSchemaCache;
-exports.createSchemaCache = createSchemaCache;
-const _2019_1 = __importDefault(require("ajv/dist/2019"));
-class SchemaCache {
+import Ajv2019pkg from 'ajv/dist/2019.js';
+const Ajv2019 = Ajv2019pkg.default || Ajv2019pkg;
+export class SchemaCache {
+    cache = new Map();
+    ajv;
+    stats = {
+        hits: 0,
+        misses: 0,
+        size: 0,
+    };
     constructor(ajvOptions) {
-        this.cache = new Map();
-        this.stats = {
-            hits: 0,
-            misses: 0,
-            size: 0,
-        };
-        this.ajv = new _2019_1.default(ajvOptions || {
+        this.ajv = new Ajv2019(ajvOptions || {
             allErrors: true,
             strict: false,
             validateFormats: false,
@@ -124,13 +118,12 @@ class SchemaCache {
         this.ajv.removeSchema(schemaIdOrRef);
     }
 }
-exports.SchemaCache = SchemaCache;
 // Singleton instance
 let instance = null;
 /**
  * Get the singleton instance of SchemaCache
  */
-function getSchemaCache() {
+export function getSchemaCache() {
     if (!instance) {
         instance = new SchemaCache();
     }
@@ -139,6 +132,6 @@ function getSchemaCache() {
 /**
  * Create a new SchemaCache instance (for testing or isolated usage)
  */
-function createSchemaCache(ajvOptions) {
+export function createSchemaCache(ajvOptions) {
     return new SchemaCache(ajvOptions);
 }

@@ -1,15 +1,17 @@
 import type { Config } from 'jest';
 
 const config: Config = {
-  preset: 'ts-jest',
+  preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
+  extensionsToTreatAsEsm: ['.ts'],
   roots: ['<rootDir>/src'],
   testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
   transform: {
-    '^.+\\.ts$': 'ts-jest',
+    '^.+\\.ts$': ['ts-jest', { useESM: true }],
   },
-  // Use transformed schema from dist for validation tests
+  // ESM module mapping - strip .js from imports
   moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1',
     '(.*)schemas/complete-schema\\.json$': '<rootDir>/dist/schemas/complete-schema.json',
   },
   collectCoverageFrom: [

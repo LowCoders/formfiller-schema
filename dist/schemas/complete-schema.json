@@ -12,25 +12,24 @@
           "enum": [
             "arrayLength",
             "async",
+            "atLeastOne",
             "compare",
             "computed",
-            "crossFieldAtLeastOne",
-            "crossFieldCustom",
-            "crossFieldDateInRange",
-            "crossFieldEquals",
-            "crossFieldGreaterThan",
-            "crossFieldLessThan",
-            "crossFieldNotEquals",
-            "crossFieldPercentageSum",
-            "crossFieldSumEquals",
             "custom",
+            "dateInRange",
             "email",
+            "equals",
+            "greaterThan",
+            "lessThan",
+            "notEquals",
             "numeric",
             "pattern",
+            "percentageSum",
             "plugin",
             "range",
             "required",
             "stringLength",
+            "sumEquals",
             "temporal"
           ],
           "description": "The type of validation to apply"
@@ -381,213 +380,6 @@
               "max": {
                 "type": "number",
                 "description": "Maximum array length"
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "type": {
-                "const": "crossFieldEquals"
-              }
-            },
-            "required": [
-              "type"
-            ]
-          },
-          "then": {
-            "properties": {
-              "targetFields": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "Array of field names to validate together"
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "type": {
-                "const": "crossFieldNotEquals"
-              }
-            },
-            "required": [
-              "type"
-            ]
-          },
-          "then": {
-            "properties": {
-              "targetFields": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "Array of field names to validate together"
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "type": {
-                "const": "crossFieldGreaterThan"
-              }
-            },
-            "required": [
-              "type"
-            ]
-          },
-          "then": {
-            "properties": {
-              "targetFields": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "Array of field names to validate together"
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "type": {
-                "const": "crossFieldLessThan"
-              }
-            },
-            "required": [
-              "type"
-            ]
-          },
-          "then": {
-            "properties": {
-              "targetFields": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "Array of field names to validate together"
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "type": {
-                "const": "crossFieldSumEquals"
-              }
-            },
-            "required": [
-              "type"
-            ]
-          },
-          "then": {
-            "properties": {
-              "targetFields": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "Array of field names to validate together"
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "type": {
-                "const": "crossFieldPercentageSum"
-              }
-            },
-            "required": [
-              "type"
-            ]
-          },
-          "then": {
-            "properties": {
-              "targetFields": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "Array of field names to validate together"
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "type": {
-                "const": "crossFieldDateInRange"
-              }
-            },
-            "required": [
-              "type"
-            ]
-          },
-          "then": {
-            "properties": {
-              "targetFields": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "Array of field names to validate together"
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "type": {
-                "const": "crossFieldAtLeastOne"
-              }
-            },
-            "required": [
-              "type"
-            ]
-          },
-          "then": {
-            "properties": {
-              "targetFields": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "Array of field names to validate together"
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "type": {
-                "const": "crossFieldCustom"
-              }
-            },
-            "required": [
-              "type"
-            ]
-          },
-          "then": {
-            "properties": {
-              "targetFields": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "description": "Array of field names to validate together"
               }
             }
           }

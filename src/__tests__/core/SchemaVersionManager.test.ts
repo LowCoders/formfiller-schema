@@ -4,7 +4,7 @@
  * Tests for version management and migration functionality
  */
 
-import { SchemaVersionManager, SchemaMigration } from '../../core/SchemaVersionManager';
+import { SchemaVersionManager, SchemaMigration } from '../../core/SchemaVersionManager.js';
 
 describe('SchemaVersionManager', () => {
   let versionManager: SchemaVersionManager;

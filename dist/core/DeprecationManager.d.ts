@@ -82,3 +82,4 @@ export declare class DeprecationManager {
  * Get the singleton instance of DeprecationManager
  */
 export declare function getDeprecationManager(): DeprecationManager;
+//# sourceMappingURL=DeprecationManager.d.ts.map

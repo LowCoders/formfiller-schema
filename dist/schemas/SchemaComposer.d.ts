@@ -47,3 +47,4 @@ export declare class SchemaComposer {
  * CLI usage example
  */
 export declare function composeSchemas(): Promise<void>;
+//# sourceMappingURL=SchemaComposer.d.ts.map

@@ -1,5 +1,5 @@
-import { validateField, validateView, schemas } from '../index';
-import { FieldConfig, ViewConfig } from '../interfaces';
+import { validateField, validateView, schemas } from '../index.js';
+import { FieldConfig, ViewConfig } from '../interfaces/index.js';
 
 describe('Schema Validation Tests', () => {
   describe('Field Validation', () => {

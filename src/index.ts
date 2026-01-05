@@ -1,10 +1,11 @@
-import * as interfaces from './interfaces';
+import * as interfaces from './interfaces/index.js';
 // Use AJV 2019-09 for JSON Schema 2019-09 support (unevaluatedProperties)
-import Ajv2019 from 'ajv/dist/2019';
-import { completeSchema } from './schemas';
+import Ajv2019pkg from 'ajv/dist/2019.js';
+const Ajv2019 = Ajv2019pkg.default || Ajv2019pkg;
+import { completeSchema } from './schemas/index.js';
 
 // Export all interfaces
-export * from './interfaces';
+export * from './interfaces/index.js';
 
 // Export core utilities (v2.1.0 optimization features)
 // Note: Avoid name conflicts by explicitly managing exports
@@ -34,9 +35,9 @@ export {
   createPerformanceMonitor,
   PerformanceMetrics,
   MeasurementResult,
-} from './core';
+} from './core/index.js';
 
-export { v1ToV2Migration, MigrationRegistry, getMigrationRegistry } from './migrations';
+export { v1ToV2Migration, MigrationRegistry, getMigrationRegistry } from './migrations/index.js';
 
 // NOTE: Generators are NOT exported in main bundle (Node.js only)
 // They use 'fs' and 'path' which are not available in browser

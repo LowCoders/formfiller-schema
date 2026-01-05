@@ -6,7 +6,9 @@
  *
  * Uses AJV 2019-09 for JSON Schema 2019-09 support (unevaluatedProperties).
  */
-import Ajv2019, { ValidateFunction } from 'ajv/dist/2019';
+import { ValidateFunction } from 'ajv/dist/2019.js';
+declare const Ajv2019: any;
+type Ajv2019Type = InstanceType<typeof Ajv2019>;
 export interface CacheStats {
     hits: number;
     misses: number;
@@ -56,7 +58,7 @@ export declare class SchemaCache {
     /**
      * Get the underlying AJV instance
      */
-    getAjv(): Ajv2019;
+    getAjv(): Ajv2019Type;
     /**
      * Add a schema to AJV instance
      */
@@ -74,3 +76,5 @@ export declare function getSchemaCache(): SchemaCache;
  * Create a new SchemaCache instance (for testing or isolated usage)
  */
 export declare function createSchemaCache(ajvOptions?: any): SchemaCache;
+export {};
+//# sourceMappingURL=SchemaCache.d.ts.map

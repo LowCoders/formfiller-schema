@@ -11,6 +11,23 @@ export type ConditionalExpression =
  */
 export type ValidationCondition = ConditionalExpression;
 
+/**
+ * All supported crossField validation types.
+ * The type name IS the callback name - no conversion needed.
+ */
+export const CROSS_FIELD_TYPES = [
+  'equals',
+  'notEquals',
+  'greaterThan',
+  'lessThan',
+  'sumEquals',
+  'percentageSum',
+  'dateInRange',
+  'atLeastOne',
+] as const;
+
+export type CrossFieldType = (typeof CROSS_FIELD_TYPES)[number];
+
 // Base interfaces
 export interface ValidationRule {
   type: // Basic types (DevExtreme compatible)
@@ -28,16 +45,15 @@ export interface ValidationRule {
     | 'computed' // Calculation without validation (scoring, aggregation)
     | 'temporal' // Time-dependent validation
     | 'plugin' // Pluggable validation
-    // CrossField validator types (new format - type contains the validator name)
-    | 'crossFieldEquals' // Fields must be equal
-    | 'crossFieldNotEquals' // Fields must not be equal
-    | 'crossFieldGreaterThan' // First field > second field
-    | 'crossFieldLessThan' // First field < second field
-    | 'crossFieldSumEquals' // Sum of fields equals target
-    | 'crossFieldPercentageSum' // Fields sum to 100%
-    | 'crossFieldDateInRange' // Date within range of other dates
-    | 'crossFieldAtLeastOne' // At least one field has value
-    | 'crossFieldCustom'; // Custom crossField validator
+    // CrossField validator types (type IS the callback name)
+    | 'equals' // Fields must be equal
+    | 'notEquals' // Fields must not be equal
+    | 'greaterThan' // First field > second field
+    | 'lessThan' // First field < second field
+    | 'sumEquals' // Sum of fields equals target
+    | 'percentageSum' // Fields sum to 100%
+    | 'dateInRange' // Date within range of other dates
+    | 'atLeastOne'; // At least one field has value
 
   message?: string;
 
@@ -86,10 +102,6 @@ export interface ValidationRule {
 
   // CrossField validation
   targetFields?: string[];
-  crossFieldValidator?:
-    | string
-    | { name: string; params?: Record<string, any> }
-    | ((values: Record<string, any>, context: any) => boolean);
 
   // Computed (for calculations)
   compute?: string | ((values: Record<string, any>, context: any) => any);

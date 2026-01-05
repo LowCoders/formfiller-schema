@@ -44,3 +44,4 @@ export declare class DocGenerator {
  *   ts-node scripts/generate-docs.ts
  */
 export declare function generateDocs(): Promise<void>;
+//# sourceMappingURL=DocGenerator.d.ts.map
