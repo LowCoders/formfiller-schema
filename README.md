@@ -31,53 +31,98 @@ npm run build:libs
 
 ## Build Pipeline
 
-```
-src/schemas/complete-schema.json     src/interfaces/index.ts
-              │                               │
-              ▼                               ▼
-      ┌───────────────────────────────────────────┐
-      │              npm run build                │
-      └───────────────────────────────────────────┘
-              │                               │
-              ▼                               ▼
-    copy to dist/schemas/              tsc compile
-              │                               │
-              ▼                               ▼
-    transform-schema.ts              dist/*.d.ts files
-              │                               │
-              ▼                               ▼
-dist/schemas/complete-schema.json   generate-monaco-types.ts
-    (if/then structure)                       │
-                                              ▼
-                                   dist/monaco-types.d.ts
+```mermaid
+flowchart TD
+    subgraph source [Source - Single Source of Truth]
+        TS[src/interfaces/index.ts]
+    end
+
+    subgraph build [npm run build]
+        TSC[tsc compile]
+        GEN[generate:schema]
+        TRANS[transform:schema]
+        MONACO[generate:monaco]
+    end
+
+    subgraph output [Output]
+        DTS[dist/*.d.ts]
+        RAW[dist/schemas/raw-schema.json]
+        COMPLETE[dist/schemas/complete-schema.json]
+        MTYPES[dist/monaco-types.d.ts]
+    end
+
+    TS --> TSC
+    TS --> GEN
+    
+    TSC --> DTS
+    DTS --> MONACO
+    
+    GEN --> RAW
+    RAW --> TRANS
+    TRANS --> COMPLETE
+    
+    MONACO --> MTYPES
 ```
 
 The `npm run build` command executes:
 
 1. **TypeScript compilation** - Compiles `src/` to `dist/`
-2. **Schema copy** - Copies `src/schemas/*.json` to `dist/schemas/`
-3. **transform:schema** - Transforms FieldConfig from `oneOf` to `if/then/allOf` for Monaco IntelliSense
+2. **generate:schema** - Generates JSON Schema from TypeScript interfaces using `ts-json-schema-generator`
+3. **transform:schema** - Transforms FieldConfig from `anyOf` to `if/then/allOf` for Monaco IntelliSense
 4. **generate:monaco** - Bundles TypeScript definitions for Monaco editor
 
 ## Scripts
 
 | Script | Description |
 |--------|-------------|
-| `build` | Full build pipeline (tsc + schema transform + monaco types) |
-| `transform:schema` | Transforms `oneOf` to `if/then/allOf` structure for Monaco |
+| `build` | Full build pipeline (tsc + schema generation + transform + monaco types) |
+| `generate:schema` | Generates JSON Schema from TypeScript interfaces |
+| `transform:schema` | Transforms `anyOf` to `if/then/allOf` structure for Monaco |
 | `generate:monaco` | Bundles `.d.ts` files into `monaco-types.d.ts` |
+| `build:legacy` | Legacy build using manual schema (fallback) |
 | `test` | Run Jest tests |
-| `distribute` | Update schema in dependent projects (legacy) |
+
+### generate-schema.ts
+
+Generates JSON Schema from TypeScript interfaces using `ts-json-schema-generator`:
+
+- Reads `src/interfaces/index.ts`
+- Outputs `dist/schemas/raw-schema.json`
+- Preserves JSDoc comments as descriptions
+- Creates `anyOf` structures for union types
 
 ### transform-schema.ts
 
-Transforms the JSON Schema for better Monaco editor IntelliSense:
+Transforms the generated JSON Schema for better Monaco editor IntelliSense:
 
-**Input (oneOf structure):**
+```mermaid
+flowchart LR
+    subgraph input [Input: anyOf structure]
+        A[FieldConfig]
+        A --> B[anyOf]
+        B --> C[TextFieldConfig]
+        B --> D[NumberFieldConfig]
+        B --> E[HtmlEditorFieldConfig]
+    end
+    
+    subgraph output [Output: if/then structure]
+        F[FieldConfig]
+        F --> G[properties: base props]
+        F --> H[allOf]
+        H --> I["if type=text then ..."]
+        H --> J["if type=number then ..."]
+        H --> K["if type=htmleditor then ..."]
+    end
+    
+    input --> |transform| output
+```
+
+**Input (anyOf structure from generator):**
+
 ```json
 {
   "FieldConfig": {
-    "oneOf": [
+    "anyOf": [
       { "$ref": "#/definitions/TextFieldConfig" },
       { "$ref": "#/definitions/HtmlEditorFieldConfig" }
     ]
@@ -86,10 +131,11 @@ Transforms the JSON Schema for better Monaco editor IntelliSense:
 ```
 
 **Output (if/then/allOf structure):**
+
 ```json
 {
   "FieldConfig": {
-    "properties": { /* base properties */ },
+    "properties": { /* base properties from BaseFieldConfig */ },
     "allOf": [
       {
         "if": { "properties": { "type": { "const": "htmleditor" } } },
@@ -108,6 +154,30 @@ Collects all TypeScript definition files from `dist/` and bundles them into a si
 
 ## Monaco Integration
 
+```mermaid
+flowchart LR
+    subgraph schema_pkg [formfiller-schema]
+        SCHEMA[complete-schema.json]
+    end
+    
+    subgraph frontend [formfiller-frontend]
+        EDITOR[ConfigJSONEditor.tsx]
+        MONACO[Monaco Editor]
+    end
+    
+    subgraph features [Features]
+        F1[Type-specific IntelliSense]
+        F2[Enum autocomplete]
+        F3[Validation errors]
+    end
+    
+    SCHEMA --> |import| EDITOR
+    EDITOR --> MONACO
+    MONACO --> F1
+    MONACO --> F2
+    MONACO --> F3
+```
+
 The frontend `ConfigJSONEditor.tsx` imports the transformed schema:
 
 ```typescript
@@ -121,18 +191,28 @@ Key features:
 
 ## Modifying the Schema
 
-1. **Edit JSON Schema**: `src/schemas/complete-schema.json`
-2. **Update TypeScript types**: `src/interfaces/index.ts`
-3. **Build**: `npm run build` (or `npm run build:schema` from workspace root)
-4. **Test in Monaco**: Restart frontend dev server and verify IntelliSense
+The TypeScript interfaces in `src/interfaces/index.ts` are the **Single Source of Truth**. The JSON Schema is automatically generated from them.
+
+1. **Edit TypeScript types**: `src/interfaces/index.ts`
+2. **Build**: `npm run build`
+3. **Test in Monaco**: Restart frontend dev server and verify IntelliSense
 
 ### Adding a new field type
 
+```mermaid
+flowchart LR
+    A[1. Add to FieldType enum] --> B[2. Create NewFieldConfig interface]
+    B --> C["3. Add type: 'yourtype' literal"]
+    C --> D[4. Add to FieldConfig union]
+    D --> E[5. npm run build]
+    E --> F[JSON Schema auto-generated!]
+```
+
 1. Add the type to `FieldType` enum in `src/interfaces/index.ts`
 2. Create `NewFieldConfig` interface extending `BaseFieldConfig`
-3. Add to `FieldConfig` union type
-4. Add JSON Schema definition in `src/schemas/complete-schema.json`
-5. Build and test
+3. Add `type: 'yourtype'` literal property to the interface
+4. Add to `FieldConfig` union type
+5. Build and test - JSON Schema is auto-generated!
 
 ### Adding properties with enum values
 

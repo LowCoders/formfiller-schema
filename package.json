@@ -18,10 +18,12 @@
     "./dist/*": "./dist/*"
   },
   "scripts": {
-    "build": "tsc && mkdir -p dist/schemas && cp src/schemas/*.json dist/schemas/ && npm run transform:schema && npm run generate:monaco",
+    "build": "tsc && mkdir -p dist/schemas && npm run generate:schema && npm run transform:schema && npm run generate:monaco",
+    "build:legacy": "tsc && mkdir -p dist/schemas && cp src/schemas/*.json dist/schemas/ && npm run transform:schema && npm run generate:monaco",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "generate:schema": "node --loader ts-node/esm scripts/generate-schema.ts",
     "generate:types": "node --loader ts-node/esm scripts/generate-types.ts",
     "generate:docs": "node --loader ts-node/esm scripts/generate-docs.ts",
     "generate:monaco": "node --loader ts-node/esm scripts/generate-monaco-types.ts",
@@ -63,6 +65,7 @@
     "json-schema-to-typescript": "^13.1.1",
     "prettier": "^3.7.4",
     "ts-jest": "^29.4.4",
+    "ts-json-schema-generator": "^2.4.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
