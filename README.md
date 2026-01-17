@@ -9,6 +9,84 @@ Shared schema definitions for the FormFiller application. Provides TypeScript ty
 - **ValidationRule**: DevExtreme-compatible validation rules
 - **SchemaValidator**: Multi-level validation with caching
 
+## Package Dependencies
+
+This package is a core dependency for multiple FormFiller repositories:
+
+```mermaid
+flowchart TB
+    subgraph schema [formfiller-schema]
+        INTS["src/interfaces/index.ts<br/>TypeScript interfaces"]
+        CSCHEMA["dist/schemas/complete-schema.json<br/>JSON Schema"]
+    end
+    
+    subgraph libs [Library Packages]
+        VAL[formfiller-validator]
+        EMBED[formfiller-embed]
+    end
+    
+    subgraph apps [Application Packages]
+        BE[formfiller-backend]
+        FE[formfiller-frontend]
+    end
+    
+    INTS --> VAL
+    INTS --> EMBED
+    INTS --> BE
+    INTS --> FE
+    
+    VAL --> EMBED
+    VAL --> BE
+    VAL --> FE
+    
+    CSCHEMA --> BE
+    CSCHEMA --> FE
+```
+
+**Build order for libraries:**
+
+```
+formfiller-types → formfiller-schema → formfiller-validator → formfiller-embed
+```
+
+## Usage by Repository
+
+| Repository | TypeScript Interfaces Used | complete-schema.json Usage |
+|------------|---------------------------|---------------------------|
+| **formfiller-frontend** | `FieldConfig`, `ViewConfig`, `ValidationRule`, `FieldType`, `LookupConfig` | Monaco editor IntelliSense in `ConfigJSONEditor.tsx` |
+| **formfiller-backend** | `ItemConfig`, `FormPreferences`, `FieldConfig`, `ValidationRule` | AJV runtime validation in `configValidator.ts` |
+| **formfiller-embed** | `ViewConfig`, `FieldConfig`, `FormPreferences`, `ValidationRuleOrGroup` | Not used directly |
+| **formfiller-validator** | `ValidationRule`, `FieldConfig`, `ConditionalExpression`, `ComputedRule`, `CrossFieldType` | Not used directly |
+
+### Import Examples
+
+**Frontend (Monaco IntelliSense):**
+
+```typescript
+// TypeScript types
+import { FieldConfig, ViewConfig } from 'formfiller-schema';
+
+// JSON Schema for Monaco editor
+import completeSchemaRaw from 'formfiller-schema/dist/schemas/complete-schema.json';
+```
+
+**Backend (AJV Validation):**
+
+```typescript
+// TypeScript types
+import { ItemConfig, FieldConfig } from 'formfiller-schema';
+
+// Schema for AJV validation
+import { schemas } from 'formfiller-schema';
+const { completeSchema } = schemas;
+```
+
+**Validator/Embed (Types only):**
+
+```typescript
+import { ValidationRule, ConditionalExpression } from 'formfiller-schema';
+```
+
 ## Installation
 
 ### Production (GitHub)
@@ -227,6 +305,114 @@ For Monaco autocomplete to work with enum values:
   }
 }
 ```
+
+## Development Workflow
+
+### Schema Modification Flow
+
+```mermaid
+sequenceDiagram
+    participant Dev as Developer
+    participant Schema as formfiller-schema
+    participant Validator as formfiller-validator
+    participant Embed as formfiller-embed
+    participant Apps as backend/frontend
+    
+    Dev->>Schema: 1. Edit src/interfaces/index.ts
+    Dev->>Schema: 2. npm run build
+    Note over Schema: tsc + generate:schema + transform:schema
+    
+    Dev->>Schema: 3. git commit && git push
+    
+    alt Local Development - Workspace
+        Dev->>Validator: 4a. npm run build:validator
+        Dev->>Embed: 4b. npm run build:embed
+        Note over Apps: Changes visible via symlinks
+    else Production - GitHub
+        Dev->>Apps: 4. npm update formfiller-schema
+        Dev->>Apps: 5. Restart servers
+    end
+```
+
+### Local Development (Recommended)
+
+Using [formfiller-dev-setup](https://github.com/LowCoders/formfiller-dev-setup) workspace:
+
+```bash
+# 1. Edit the schema
+cd /var/www/formfiller-schema
+# ... make changes to src/interfaces/index.ts ...
+
+# 2. Build schema
+npm run build
+
+# 3. Rebuild dependent libraries
+cd /var/www
+npm run build:libs   # Builds: types → schema → validator → embed
+
+# 4. Test in apps
+# Frontend: refresh browser (Vite hot-reloads)
+# Backend: restart if running
+```
+
+### Production Deployment
+
+For production environments where packages are installed from GitHub:
+
+**Option A: Using sync-dependents.sh (automated)**
+
+```bash
+cd /var/www/formfiller-schema
+
+# Build, commit, push, and update all dependent projects
+./sync-dependents.sh
+
+# With options:
+DRY_RUN=true ./sync-dependents.sh      # Preview only
+AUTO_RESTART=true ./sync-dependents.sh  # Restart backend automatically
+SKIP_PUSH=true ./sync-dependents.sh     # Skip git push (local testing)
+```
+
+**Option B: Manual update**
+
+```bash
+# 1. Build and push schema
+cd /var/www/formfiller-schema
+npm run build
+git add -A && git commit -m "chore: update schema"
+git push
+
+# 2. Update dependent projects
+cd /var/www/formfiller-backend
+npm update formfiller-schema formfiller-validator
+npm run build
+
+cd /var/www/formfiller-frontend
+npm update formfiller-schema formfiller-validator
+
+# 3. Restart servers
+```
+
+### sync-dependents.sh Script
+
+The `sync-dependents.sh` script automates the schema update process for GitHub-based deployments:
+
+| Step | Action |
+|------|--------|
+| 1 | Build formfiller-schema (`npm run build`) |
+| 2 | Commit and push changes to GitHub |
+| 3 | Update backend (`npm update formfiller-schema formfiller-validator formfiller-types`) |
+| 4 | Rebuild backend |
+| 5 | Update frontend packages |
+| 6 | Verify installation |
+
+**Environment Variables:**
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DRY_RUN` | `false` | Preview mode - no actual changes |
+| `AUTO_RESTART` | `false` | Automatically restart backend server |
+| `SKIP_PUSH` | `false` | Skip git push (for local testing) |
 
 ## Quick Start
 
