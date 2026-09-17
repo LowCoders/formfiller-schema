@@ -110,12 +110,23 @@ export interface ConditionalField {
     value: any;
     logicalOperator?: 'and' | 'or';
 }
+/**
+ * Lookup (dropdown) data configuration.
+ *
+ * Cascading lookups need no separate declaration: any extra key on the `dataSource` items
+ * beyond those referenced by `displayExpr`/`valueExpr` is treated as a parent field name,
+ * and the list is filtered to the rows where that key equals the parent field's value.
+ *
+ * @example
+ * // The `city` list narrows down to the selected `country`, because the rows carry a
+ * // `country` key and a field named `country` exists on the form.
+ * { dataSource: [{ id: 'nyc', name: 'New York', country: 'us' }], displayExpr: 'name', valueExpr: 'id' }
+ */
 export interface LookupConfig {
     dataSource: any[];
     displayExpr?: string;
     valueExpr?: string;
     setCellValue?: boolean;
-    dependsOn?: string[];
 }
 export interface BaseFieldConfig {
     name?: string;
@@ -169,7 +180,16 @@ export interface BaseFieldConfig {
     allowFiltering?: boolean;
     editorOptions?: Record<string, any>;
 }
-export type FieldType = 'autocomplete' | 'calendar' | 'checkbox' | 'colorbox' | 'date' | 'daterange' | 'dropdown' | 'dropdownbox' | 'htmleditor' | 'lookup' | 'number' | 'radiogroup' | 'rangeslider' | 'selectbox' | 'slider' | 'switch' | 'tagbox' | 'text' | 'textarea' | 'boolean' | 'time' | 'datetime' | 'grid' | 'tree' | 'form' | 'group' | 'tabbed' | 'tab' | 'stepper' | 'step' | 'button' | 'empty' | 'info';
+/**
+ * Every supported field type, as a runtime list.
+ *
+ * Consumers map these onto their own concepts (the embed picks a DevExtreme editor, the
+ * results grid picks a column data type). Exposing the list at runtime lets those mappings
+ * be checked for completeness by a test, instead of a missing type silently falling through
+ * to a default.
+ */
+export declare const FIELD_TYPES: readonly ["autocomplete", "calendar", "checkbox", "colorbox", "date", "daterange", "dropdown", "dropdownbox", "htmleditor", "lookup", "number", "radiogroup", "rangeslider", "selectbox", "slider", "switch", "tagbox", "text", "textarea", "boolean", "time", "datetime", "grid", "tree", "form", "group", "tabbed", "tab", "stepper", "step", "button", "empty", "info"];
+export type FieldType = (typeof FIELD_TYPES)[number];
 export interface NumberFormat {
     type?: 'currency' | 'percent' | 'decimal' | 'fixedPoint' | 'exponential' | 'thousands' | 'millions' | 'billions' | 'trillions' | 'largeNumber';
     precision?: number;
@@ -487,6 +507,8 @@ export interface TabbedFieldConfig extends BaseContainerConfig {
     type: 'tabbed';
     name?: string;
     tabPanelOptions?: any;
+    /** A tabbed container holds tabs only; the fields go inside the tabs. */
+    items?: TabFieldConfig[];
 }
 export interface TabFieldConfig extends BaseContainerConfig {
     type: 'tab';
@@ -503,6 +525,8 @@ export interface StepperFieldConfig extends BaseContainerConfig {
         showTitle?: boolean;
         orientation?: 'horizontal' | 'vertical';
     };
+    /** A stepper holds steps only; the fields go inside the steps. */
+    items?: StepFieldConfig[];
 }
 export interface StepFieldConfig extends BaseContainerConfig {
     type: 'step';

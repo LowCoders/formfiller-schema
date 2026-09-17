@@ -60,6 +60,7 @@ describe('PerformanceMonitor', () => {
       for (let i = 0; i < 1000; i++) {
         sum += i;
       }
+      expect(sum).toBeGreaterThan(0);
 
       stop();
 

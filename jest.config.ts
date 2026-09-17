@@ -7,12 +7,26 @@ const config: Config = {
   roots: ['<rootDir>/src'],
   testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
   transform: {
-    '^.+\\.ts$': ['ts-jest', { useESM: true }],
+    // Keep the module settings of tsconfig.json: ts-jest otherwise downgrades `module`,
+    // which makes the import attribute on complete-schema.json a compile error and takes
+    // every suite that imports the schema with it.
+    '^.+\\.ts$': [
+      'ts-jest',
+      {
+        useESM: true,
+        tsconfig: {
+          module: 'NodeNext',
+          moduleResolution: 'NodeNext',
+        },
+      },
+    ],
   },
   // ESM module mapping - strip .js from imports
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
-    '(.*)schemas/complete-schema\\.json$': '<rootDir>/dist/schemas/complete-schema.json',
+    // src/schemas/complete-schema.json is only a placeholder with empty definitions; the
+    // real schema is generated into dist by the build. Matches './complete-schema.json' too.
+    'complete-schema\\.json$': '<rootDir>/dist/schemas/complete-schema.json',
   },
   collectCoverageFrom: [
     'src/**/*.ts',

@@ -93,7 +93,9 @@ function generateMonacoTypesBundle(): void {
  * FormFiller Schema - Monaco Editor Type Definitions Bundle
  * 
  * Auto-generated type definitions for Monaco Editor IntelliSense
- * Generated: ${new Date().toISOString()}
+ *
+ * No build timestamp here on purpose: dist/ is committed, and CI compares a fresh
+ * build against it, so the output has to be byte-identical between runs.
  */
 
 declare module 'formfiller-schema' {

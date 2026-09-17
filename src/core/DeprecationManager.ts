@@ -112,7 +112,7 @@ export class DeprecationManager {
         const migratedValue = deprecation.migrationHelper(value);
 
         // Remove old field
-        delete (result as any)[key];
+        delete (result)[key];
 
         // Add new field if replacement is specified
         if (deprecation.replacement) {
@@ -120,7 +120,7 @@ export class DeprecationManager {
         }
       } else if (value && typeof value === 'object') {
         // Recursively migrate nested objects
-        (result as any)[key] = this.applyMigrations(value, fullPath);
+        (result)[key] = this.applyMigrations(value, fullPath);
       }
     }
 

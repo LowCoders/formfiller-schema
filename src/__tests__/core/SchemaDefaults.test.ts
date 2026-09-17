@@ -4,7 +4,7 @@
  * Tests for default values application
  */
 
-import { SchemaDefaults, withDefaults, withDeepDefaults } from '../../core/SchemaDefaults.js';
+import { SchemaDefaults, withDeepDefaults } from '../../core/SchemaDefaults.js';
 import type { FormPreferences } from '../../interfaces/index.js';
 
 describe('SchemaDefaults', () => {

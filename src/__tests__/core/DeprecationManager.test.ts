@@ -4,6 +4,8 @@
  * Tests for deprecated field management
  */
 
+// In ESM there is no `jest` global, it has to be imported
+import { jest } from '@jest/globals';
 import { DeprecationManager, getDeprecationManager } from '../../core/DeprecationManager.js';
 
 describe('DeprecationManager', () => {
@@ -169,7 +171,7 @@ describe('DeprecationManager', () => {
 
   describe('Logging', () => {
     it('should log warnings when enabled', () => {
-      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
       manager.setLogging(true);
 
       manager.markAsDeprecated({
@@ -185,7 +187,7 @@ describe('DeprecationManager', () => {
     });
 
     it('should not log duplicate warnings', () => {
-      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
       manager.setLogging(true);
 
       manager.markAsDeprecated({
@@ -202,7 +204,7 @@ describe('DeprecationManager', () => {
     });
 
     it('should reset warnings', () => {
-      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
       manager.setLogging(true);
 
       manager.markAsDeprecated({

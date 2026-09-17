@@ -469,18 +469,37 @@
         },
         "setCellValue": {
           "type": "boolean"
-        },
-        "dependsOn": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
         }
       },
       "required": [
         "dataSource"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "description": "Lookup (dropdown) data configuration.\n\nCascading lookups need no separate declaration: any extra key on the `dataSource` items beyond those referenced by `displayExpr`/`valueExpr` is treated as a parent field name, and the list is filtered to the rows where that key equals the parent field's value.",
+      "examples": [
+        {
+          "dataSource": [
+            {
+              "id": "nyc",
+              "name": "New York",
+              "country": "us"
+            }
+          ],
+          "displayExpr": "name",
+          "valueExpr": "id"
+        }
+      ],
+      "example": {
+        "dataSource": [
+          {
+            "id": "nyc",
+            "name": "New York",
+            "country": "us"
+          }
+        ],
+        "displayExpr": "name",
+        "valueExpr": "id"
+      }
     },
     "BaseFieldConfig": {
       "type": "object",
@@ -7286,8 +7305,9 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/FieldConfig"
-          }
+            "$ref": "#/definitions/TabFieldConfig"
+          },
+          "description": "A tabbed container holds tabs only; the fields go inside the tabs."
         },
         "excludeFromPath": {
           "type": "boolean"
@@ -7762,8 +7782,9 @@
         "items": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/FieldConfig"
-          }
+            "$ref": "#/definitions/StepFieldConfig"
+          },
+          "description": "A stepper holds steps only; the fields go inside the steps."
         },
         "excludeFromPath": {
           "type": "boolean"

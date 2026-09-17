@@ -85,7 +85,7 @@ export class SchemaValidator {
    */
   private strictValidation(config: any, schema: any, options: ValidationOptions): ValidationResult {
     const validator = this.getValidator(schema);
-    const valid = validator(config) as boolean;
+    const valid = validator(config);
 
     const errors: ValidationError[] = [];
     const warnings: ValidationWarning[] = [];
@@ -116,11 +116,11 @@ export class SchemaValidator {
   /**
    * Loose validation - optional fields allowed, basic type checking
    */
-  private looseValidation(config: any, schema: any, options: ValidationOptions): ValidationResult {
+  private looseValidation(config: any, schema: any, _options: ValidationOptions): ValidationResult {
     // Create a modified schema with all required fields removed
     const looseSchema = this.makeSchemaLoose(schema);
     const validator = this.getValidator(looseSchema);
-    const valid = validator(config) as boolean;
+    const valid = validator(config);
 
     const errors: ValidationError[] = [];
     const warnings: ValidationWarning[] = [];
@@ -149,7 +149,7 @@ export class SchemaValidator {
   /**
    * Development validation - minimal checks, maximum flexibility
    */
-  private devValidation(config: any, schema: any, options: ValidationOptions): ValidationResult {
+  private devValidation(config: any, _schema: any, _options: ValidationOptions): ValidationResult {
     const warnings: ValidationWarning[] = [];
 
     // Basic structure check

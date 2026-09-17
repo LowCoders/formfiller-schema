@@ -69,7 +69,7 @@ export class SchemaValidator {
     /**
      * Loose validation - optional fields allowed, basic type checking
      */
-    looseValidation(config, schema, options) {
+    looseValidation(config, schema, _options) {
         // Create a modified schema with all required fields removed
         const looseSchema = this.makeSchemaLoose(schema);
         const validator = this.getValidator(looseSchema);
@@ -99,7 +99,7 @@ export class SchemaValidator {
     /**
      * Development validation - minimal checks, maximum flexibility
      */
-    devValidation(config, schema, options) {
+    devValidation(config, _schema, _options) {
         const warnings = [];
         // Basic structure check
         if (!config || typeof config !== 'object') {

@@ -526,6 +526,11 @@ function transformSchema(): void {
   // Update the schema
   const transformedSchema = { ...srcSchema };
   transformedSchema.definitions = { ...definitions };
+
+  // The transformation relies on unevaluatedProperties, which is a 2019-09 keyword. The
+  // generator emits a draft-07 header, under which a validator would silently ignore it and
+  // accept any unknown property.
+  transformedSchema.$schema = 'https://json-schema.org/draft/2019-09/schema';
   
   // Replace FieldConfig with the new structure
   transformedSchema.definitions.FieldConfig = newFieldConfig;

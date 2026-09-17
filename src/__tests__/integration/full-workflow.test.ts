@@ -6,7 +6,6 @@
 
 import {
   getVersionManager,
-  getSchemaCache,
   getPerformanceMonitor,
   getDeprecationManager,
   getMigrationRegistry,
@@ -67,7 +66,6 @@ describe('Integration Tests', () => {
   describe('Performance-Monitored Validation with Cache', () => {
     it('should validate with performance monitoring', () => {
       const monitor = getPerformanceMonitor();
-      const cache = getSchemaCache();
       const validator = new SchemaValidator();
 
       const schema = {
@@ -133,7 +131,7 @@ describe('Integration Tests', () => {
       expect(strictResult.valid).toBe(false);
 
       // LOOSE: Might pass depending on implementation
-      const looseResult = validator.validate(incompleteConfig, schema, {
+      validator.validate(incompleteConfig, schema, {
         level: ValidationLevel.LOOSE,
       });
       // Loose is more forgiving but might still fail for required fields

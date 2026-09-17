@@ -1,7 +1,9 @@
 import * as interfaces from './interfaces/index.js';
 // Use AJV 2019-09 for JSON Schema 2019-09 support (unevaluatedProperties)
 import Ajv2019pkg from 'ajv/dist/2019.js';
-const Ajv2019 = Ajv2019pkg.default || Ajv2019pkg;
+// ajv ships CommonJS, so the default import is either the class or a { default } wrapper
+// depending on the module resolution of the consumer (tsc build vs. ts-jest).
+const Ajv2019 = (Ajv2019pkg as typeof Ajv2019pkg & { default?: typeof Ajv2019pkg }).default || Ajv2019pkg;
 import { completeSchema } from './schemas/index.js';
 
 // Export all interfaces
@@ -59,9 +61,6 @@ const validateItemConfig = ajv.compile({
   $ref: '#/definitions/ItemConfig',
   definitions: completeSchema.definitions,
 });
-
-// Backward compatibility alias
-const validateViewConfig = validateItemConfig;
 
 /**
  * Validates a field configuration against the schema

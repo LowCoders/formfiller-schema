@@ -192,12 +192,23 @@ export interface ConditionalField {
 
 // ConditionalExpression is now defined at the top (before ValidationRule) for forward declaration
 
+/**
+ * Lookup (dropdown) data configuration.
+ *
+ * Cascading lookups need no separate declaration: any extra key on the `dataSource` items
+ * beyond those referenced by `displayExpr`/`valueExpr` is treated as a parent field name,
+ * and the list is filtered to the rows where that key equals the parent field's value.
+ *
+ * @example
+ * // The `city` list narrows down to the selected `country`, because the rows carry a
+ * // `country` key and a field named `country` exists on the form.
+ * { dataSource: [{ id: 'nyc', name: 'New York', country: 'us' }], displayExpr: 'name', valueExpr: 'id' }
+ */
 export interface LookupConfig {
   dataSource: any[];
   displayExpr?: string;
   valueExpr?: string;
   setCellValue?: boolean;
-  dependsOn?: string[]; // Fields that this lookup depends on
 }
 
 export interface BaseFieldConfig {
@@ -281,44 +292,55 @@ export interface BaseFieldConfig {
   editorOptions?: Record<string, any>;
 }
 
-// Field type definitions
-export type FieldType =
+/**
+ * Every supported field type, as a runtime list.
+ *
+ * Consumers map these onto their own concepts (the embed picks a DevExtreme editor, the
+ * results grid picks a column data type). Exposing the list at runtime lets those mappings
+ * be checked for completeness by a test, instead of a missing type silently falling through
+ * to a default.
+ */
+export const FIELD_TYPES = [
   // Data types
-  | 'autocomplete'
-  | 'calendar'
-  | 'checkbox'
-  | 'colorbox'
-  | 'date'
-  | 'daterange'
-  | 'dropdown'
-  | 'dropdownbox'
-  | 'htmleditor'
-  | 'lookup'
-  | 'number'
-  | 'radiogroup'
-  | 'rangeslider'
-  | 'selectbox'
-  | 'slider'
-  | 'switch'
-  | 'tagbox'
-  | 'text'
-  | 'textarea'
-  | 'boolean'
-  | 'time'
-  | 'datetime'
+  'autocomplete',
+  'calendar',
+  'checkbox',
+  'colorbox',
+  'date',
+  'daterange',
+  'dropdown',
+  'dropdownbox',
+  'htmleditor',
+  'lookup',
+  'number',
+  'radiogroup',
+  'rangeslider',
+  'selectbox',
+  'slider',
+  'switch',
+  'tagbox',
+  'text',
+  'textarea',
+  'boolean',
+  'time',
+  'datetime',
   // Complex types
-  | 'grid'
-  | 'tree'
-  | 'form'
+  'grid',
+  'tree',
+  'form',
   // Structural types
-  | 'group'
-  | 'tabbed'
-  | 'tab'
-  | 'stepper'
-  | 'step'
-  | 'button'
-  | 'empty'
-  | 'info';
+  'group',
+  'tabbed',
+  'tab',
+  'stepper',
+  'step',
+  'button',
+  'empty',
+  'info',
+] as const;
+
+// Field type definitions
+export type FieldType = (typeof FIELD_TYPES)[number];
 
 // Number format configuration for DevExtreme NumberBox
 export interface NumberFormat {
@@ -695,7 +717,8 @@ export interface TabbedFieldConfig extends BaseContainerConfig {
   type: 'tabbed';
   name?: string; // Optional - can be omitted for anonymous tabbed containers
   tabPanelOptions?: any;
-  // items already exists in BaseContainerConfig
+  /** A tabbed container holds tabs only; the fields go inside the tabs. */
+  items?: TabFieldConfig[];
 }
 
 export interface TabFieldConfig extends BaseContainerConfig {
@@ -715,7 +738,8 @@ export interface StepperFieldConfig extends BaseContainerConfig {
     showTitle?: boolean;
     orientation?: 'horizontal' | 'vertical';
   };
-  // items already exists in BaseContainerConfig
+  /** A stepper holds steps only; the fields go inside the steps. */
+  items?: StepFieldConfig[];
 }
 
 export interface StepFieldConfig extends BaseContainerConfig {

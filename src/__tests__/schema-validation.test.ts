@@ -471,9 +471,9 @@ describe('Schema Validation Tests', () => {
                 { id: 2, category: 1, name: 'Subcategory 1.2' },
                 { id: 3, category: 2, name: 'Subcategory 2.1' },
               ],
+              // The `category` key on the rows is what makes this a cascading lookup
               displayExpr: 'name',
               valueExpr: 'id',
-              dependsOn: ['category'],
             },
           },
         ],
@@ -482,6 +482,31 @@ describe('Schema Validation Tests', () => {
       const result = validateView(formView);
       expect(result.valid).toBe(true);
       expect(result.errors).toHaveLength(0);
+    });
+
+    test('should reject a lookup declaring the removed dependsOn property', () => {
+      const formView = {
+        id: 'form-view',
+        title: 'Form View',
+        type: 'form',
+        items: [
+          {
+            name: 'subcategory',
+            label: 'Subcategory',
+            type: 'dropdown',
+            lookup: {
+              dataSource: [{ id: 1, category: 1, name: 'Subcategory 1.1' }],
+              displayExpr: 'name',
+              valueExpr: 'id',
+              dependsOn: ['category'],
+            },
+          },
+        ],
+      } as unknown as ViewConfig;
+
+      const result = validateView(formView);
+
+      expect(result.valid).toBe(false);
     });
 
     test('should validate form view with addSaveBtn', () => {

@@ -77,7 +77,7 @@ export class DeprecationManager {
                 // Apply migration helper
                 const migratedValue = deprecation.migrationHelper(value);
                 // Remove old field
-                delete result[key];
+                delete (result)[key];
                 // Add new field if replacement is specified
                 if (deprecation.replacement) {
                     this.setNestedValue(result, deprecation.replacement, migratedValue);
@@ -85,7 +85,7 @@ export class DeprecationManager {
             }
             else if (value && typeof value === 'object') {
                 // Recursively migrate nested objects
-                result[key] = this.applyMigrations(value, fullPath);
+                (result)[key] = this.applyMigrations(value, fullPath);
             }
         }
         return result;

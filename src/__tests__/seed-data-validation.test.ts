@@ -1,5 +1,5 @@
-import { validateField, validateView } from '../index.js';
-import { FieldConfig, ViewConfig } from '../interfaces/index.js';
+import { validateView } from '../index.js';
+import { ViewConfig } from '../interfaces/index.js';
 
 // Sample data from seedData.js converted to new schema format
 describe('Seed Data Validation Tests', () => {
@@ -138,9 +138,9 @@ describe('Seed Data Validation Tests', () => {
                 { id: 2, category: 1, name: 'Subcategory 1.2' },
                 { id: 3, category: 2, name: 'Subcategory 2.1' },
               ],
+              // The `category` key on the rows is what makes this a cascading lookup
               displayExpr: 'name',
               valueExpr: 'id',
-              dependsOn: ['category'],
             },
           },
         ],
